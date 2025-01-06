@@ -11,7 +11,7 @@ let
   right = "l";
 
 in {
-  home.packages = with pkgs; [ swaylock swayidle ];
+  home.packages = with pkgs; [ swaylock swayidle font-awesome ];
 
   programs.wpaperd = let wallpaper = "./backgrounds/wallhaven-p96odm.png";
   in {
@@ -33,9 +33,29 @@ in {
     };
   };
 
-  programs.i3status-rust.enable = true;
+  programs.i3status-rust = {
+    enable = true;
+    bars = {
+      default = {
+        icons = "awesome6";
+        theme = "srcery";
+      };
+    };
+  };
 
-  programs.rofi.enable = true;
+  services.mako = {
+    enable = true;
+    defaultTimeout = 5000; # 5s
+  };
+
+  programs.rofi = {
+    enable = true;
+    extraConfig = {
+      modi = "window,drun,run,ssh";
+      show-icons = true;
+      terminal = "ghostty";
+    };
+  };
 
   wayland.windowManager.sway = {
     enable = true;
@@ -117,7 +137,8 @@ in {
 
         # rofi: menu
         "${modifier}+d" = ''
-          exec ${pkgs.rofi}/bin/rofi -show drun -show-icons -font -display-drun "Apps"'';
+          exec ${pkgs.rofi}/bin/rofi -show drun 
+        '';
       };
     };
   };

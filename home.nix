@@ -28,7 +28,6 @@
     grim
     slurp
     wl-clipboard
-    mako
     nixfmt-classic
     okular
     xfce.thunar
