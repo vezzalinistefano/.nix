@@ -33,6 +33,7 @@
     okular
     xfce.thunar
     spotify
+    telegram-desktop
 
     papirus-icon-theme
 
