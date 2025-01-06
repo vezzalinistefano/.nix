@@ -7,6 +7,8 @@
   home.username = "sv";
   home.homeDirectory = "/home/sv";
 
+  nixpkgs.config.allowUnfree = true;
+
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
   # introduces backwards incompatible changes.
@@ -30,12 +32,12 @@
     nixfmt-classic
     okular
     xfce.thunar
+    spotify
+
     papirus-icon-theme
-    lxappearance
 
     rustc
     cargo
-
     python3
     go
     nodejs_23
@@ -157,6 +159,11 @@
         "git@gitlab.com:" = { insteadOf = [ "https://gitlab.com/" ]; };
       };
     };
+  };
+
+  programs.ssh = {
+    enable = true;
+    addKeysToAgent = "yes";
   };
 
   # Let Home Manager install and manage itself.
