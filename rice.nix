@@ -17,8 +17,8 @@
 
   stylix.fonts = {
     monospace = {
-      package = pkgs.nerd-fonts.sauce-code-pro;
-      name = "SauceCodePro Nerd Font";
+      package = pkgs.nerd-fonts.jetbrains-mono;
+      name = "JetBrainsMono Nerd Font";
     };
     sansSerif = {
       package = pkgs.dejavu_fonts;
@@ -29,7 +29,7 @@
       name = "DejaVu Serif";
     };
     sizes = {
-      terminal = 11;
+      terminal = 10;
       applications = 9;
     };
   };
