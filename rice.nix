@@ -21,8 +21,8 @@
       name = "JetBrainsMono Nerd Font";
     };
     sansSerif = {
-      package = pkgs.dejavu_fonts;
-      name = "DejaVu Sans";
+      package = pkgs.ibm-plex;
+      name = "IBM Plex Sans Arabic";
     };
     serif = {
       package = pkgs.dejavu_fonts;
@@ -35,6 +35,8 @@
   };
 
   stylix.opacity.terminal = 0.92;
+
+  stylix.targets.nixvim.enable = false;
 
   gtk.enable = true;
   gtk.iconTheme.package = pkgs.papirus-icon-theme;

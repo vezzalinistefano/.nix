@@ -11,7 +11,7 @@ let
   right = "l";
 
 in {
-  home.packages = with pkgs; [ swaylock swayidle font-awesome ];
+  home.packages = with pkgs; [ swaylock font-awesome ];
 
   programs.wpaperd = let wallpaper = "./backgrounds/wallhaven-p96odm.png";
   in {
@@ -22,6 +22,25 @@ in {
         apply-shadow = false;
       };
     };
+  };
+
+  services.swayidle = {
+    enable = true;
+    timeouts = [
+      {
+        timeout = 300;
+        command = "${pkgs.swaylock}/bin/swaylock";
+      }
+      {
+        timeout = 360;
+        command = "${pkgs.sway}/bin/swaymsg 'output * dpms off'";
+        resumeCommand = "${pkgs.sway}/bin/swaymsg 'output * dpms on'";
+      }
+    ];
+    events = [{
+      event = "before-sleep";
+      command = "${pkgs.swaylock}/bin/swaylock";
+    }];
   };
 
   programs.ghostty = {
@@ -68,12 +87,22 @@ in {
         statusCommand =
           "${pkgs.i3status-rust}/bin/i3status-rs ~/.config/i3status-rust/config-default.toml";
       }];
+      input = {
+        "*" = {
+          xkb_layout = "us";
+          xkb_variant = "intl";
+          xkb_numlock = "enabled";
+        };
+      };
       gaps = {
         inner = 15;
         outer = 10;
         bottom = 5;
       };
-      startup = [{ command = "${pkgs.wpaperd}/bin/wpaperd"; }];
+      startup = [
+        { command = "${pkgs.wpaperd}/bin/wpaperd"; }
+        { command = "${pkgs.haskellPackages.greenclip}/bin/greenclip daemon"; }
+      ];
       window = {
         border = 3;
         titlebar = false;
@@ -134,11 +163,11 @@ in {
         "Control+Alt+l" = "exec ${pkgs.swaylock}/bin/swaylock -f -c 000000";
         # sticky window
         "${modifier}+Shift+y" = "sticky toggle";
-
         # rofi: menu
-        "${modifier}+d" = ''
-          exec ${pkgs.rofi}/bin/rofi -show drun 
-        '';
+        "${modifier}+d" = "exec ${pkgs.rofi}/bin/rofi -show drun";
+        # rofi: clipboard manager
+        "${modifier}+c" =
+          "rofi -modi \"clipboard:greenclip print\" -show clipboard -run-command '{cmd}'";
       };
     };
   };

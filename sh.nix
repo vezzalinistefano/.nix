@@ -48,11 +48,11 @@ let
     # safer rm
     rm = "rm -Iv";
     # safer mv
-    mv = "mv -Iv";
+    mv = "mv -v";
     # nix: update nixos
-    updateNix = "sudo nixos-rebuild switch --flake .#hostname";
+    updateNix = "sudo nixos-rebuild switch --flake ~/.nix#jupiter";
     # home-manager: update home
-    updateHome = "home-manager switch --flake ~/.nix#sv";
+    updateHome = "nixfmt ~/.nix && home-manager switch --flake ~/.nix#sv";
     # home-manager: update home and channel
     updateHomePlus =
       "sudo -i nix-channel --update && home-manager switch --flake ~/.nix#sv";

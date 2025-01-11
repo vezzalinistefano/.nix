@@ -21,11 +21,17 @@
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Enable networking
-  networking.networkmanager.enable = true;
-  networking.nameservers = [ "8.8.8.8" "1.1.1.1" ];
-  networking.dhcpcd.extraConfig = ''
-    nohook resolv.conf
-  '';
+  networking = {
+    networkmanager = {
+      enable = true;
+      dns = "none";
+    };
+    nameservers = [ "1.1.1.1" "9.9.9.9" ];
+    dhcpcd = {
+      enable = true;
+      extraConfig = "nohook resolv.conf";
+    };
+  };
 
   programs.dconf.enable = true;
 
@@ -50,7 +56,7 @@
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "us";
-    variant = "";
+    variant = "alt-intl";
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -71,18 +77,28 @@
     settings = {
       default_session = {
         command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd sway";
+        user = "sv";
       };
     };
   };
 
+  # services.xserver.displayManager.gdm = {
+  #   enable = true;
+  #   wayland = true;
+  # };
+
+  services.udisks2.enable = true;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true; # if not already enabled
-    alsa.enable = true;
-    alsa.support32Bit = true;
+    alsa = {
+      enable = true;
+      support32Bit = true;
+    };
     pulse.enable = true;
     # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
+    jack.enable = false;
+    wireplumber = { enable = true; };
   };
 
   # Allow unfree packages
@@ -98,6 +114,8 @@
   ];
 
   hardware.graphics.extraPackages = [ pkgs.amdvlk ];
+  hardware.bluetooth.enable = true;
+  hardware.logitech.wireless.enable = true;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.

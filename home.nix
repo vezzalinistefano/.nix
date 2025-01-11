@@ -1,7 +1,7 @@
 { config, pkgs, lib, inputs, ... }:
 
 {
-  imports = [ ./sh.nix ./sway.nix ./rice.nix ];
+  imports = [ ./sh.nix ./sway.nix ./rice.nix ./nvim ];
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "sv";
@@ -21,18 +21,25 @@
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = with pkgs; [
-    vim
-    neovim
     wget
     neofetch
     grim
     slurp
     wl-clipboard
+    haskellPackages.greenclip
+    cliphist
     nixfmt-classic
     okular
     xfce.thunar
     spotify
     telegram-desktop
+    solaar
+    udiskie
+    killall
+    dig
+    ibm-plex
+    unzip
+    gedit
 
     papirus-icon-theme
 
@@ -42,6 +49,7 @@
     go
     nodejs_23
     gcc
+    lua-language-server
 
     nerd-fonts.sauce-code-pro
     nerd-fonts.jetbrains-mono
@@ -131,7 +139,7 @@
       };
 
       userChrome = ''
-        /* some css */                        
+        /* some css */
       '';
 
       extensions = with inputs.firefox-addons.packages."x86_64-linux"; [
