@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, ... }:
+{ pkgs, inputs, ... }:
 
 {
   imports = [ ./sh.nix ./sway.nix ./rice.nix ./nvim ];
@@ -40,6 +40,7 @@
     ibm-plex
     unzip
     gedit
+    ripgrep
 
     papirus-icon-theme
 
@@ -124,12 +125,24 @@
       };
       search.force = true;
 
-      bookmarks = [{
-        name = "wikipedia";
-        tags = [ "wiki" ];
-        keyword = "wiki";
-        url = "https://en.wikipedia.org/wiki/Special:Search?search=%s&go=Go";
-      }];
+      bookmarks = [
+        {
+          name = "wikipedia";
+          tags = [ "wiki" ];
+          keyword = "wiki";
+          url = "https://en.wikipedia.org/wiki/Special:Search?search=%s&go=Go";
+        }
+        {
+          name = "finance";
+          toolbar = true;
+          bookmarks = [{
+            name = "wallet";
+            tags = [ "finance" ];
+            keyword = "wallet";
+            url = "https://web.budgetbakers.com/dashboard";
+          }];
+        }
+      ];
 
       settings = {
         "dom.security.https_only_mode" = true;

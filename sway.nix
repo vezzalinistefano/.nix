@@ -29,17 +29,17 @@ in {
     timeouts = [
       {
         timeout = 300;
-        command = "${pkgs.swaylock}/bin/swaylock";
+        command = "${pkgs.swaylock}/bin/swaylock -f -c 000000";
       }
       {
-        timeout = 360;
-        command = "${pkgs.sway}/bin/swaymsg 'output * dpms off'";
-        resumeCommand = "${pkgs.sway}/bin/swaymsg 'output * dpms on'";
+        timeout = 600;
+        command = "${pkgs.sway}/bin/swaymsg 'output * power off'";
+        resumeCommand = "${pkgs.sway}/bin/swaymsg 'output * power on'";
       }
     ];
     events = [{
       event = "before-sleep";
-      command = "${pkgs.swaylock}/bin/swaylock";
+      command = "${pkgs.swaylock}/bin/swaylock -f -c 000000";
     }];
   };
 

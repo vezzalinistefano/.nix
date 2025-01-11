@@ -1,5 +1,14 @@
-{ pkgs, ... }: {
-  imports = [ ./tree-sitter.nix ./git.nix ];
+{
+  imports = [
+    ./tree-sitter.nix
+    ./git.nix
+    ./lsp.nix
+    ./lualine.nix
+    ./harpoon.nix
+    ./telescope.nix
+    ./mini.nix
+    ./nix.nix
+  ];
 
   programs = {
     nixvim = {
