@@ -1,0 +1,9 @@
+{ ... }:
+
+{
+  programs = {
+    gpg = {
+      enable = true;
+    };
+  };
+}
