@@ -59,6 +59,8 @@ let
     k = "kubectl";
 
     ls = "ls --color=auto";
+
+    argocd = "argocd --grpc-web";
   };
 in
 {

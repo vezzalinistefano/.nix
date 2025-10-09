@@ -132,6 +132,26 @@ in
             desc = "Undo tree";
           };
         }
+        # Harpoon add
+        {
+          action = ":lua require('harpoon.mark').add_file()";
+          key = "<leader>a";
+          options = {
+            silent= true;
+            noremap = true;
+            desc = "Harpoon add file";
+          };
+        }
+        # Harpoon menu
+        {
+          action = ":lua require('harpoon.ui').toggle_quick_menu()";
+          key = "<C-e>";
+          options = {
+            silent= true;
+            noremap = true;
+            desc = "Harpoon menu";
+          };
+        }
       ];
     };
   };

@@ -45,6 +45,9 @@
       jq
       tenv
       lazygit
+      pre-commit
+      argocd
+      fzf
 
       nixfmt-rfc-style
       ripgrep

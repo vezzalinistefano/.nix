@@ -8,6 +8,7 @@
     ignores = [
       ".direnv/*"
       ".envrc"
+      ".DS_STORE"
     ];
     extraConfig = {
       init = {
