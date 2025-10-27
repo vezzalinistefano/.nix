@@ -30,6 +30,7 @@
       spotify
       (google-cloud-sdk.withExtraComponents [ google-cloud-sdk.components.gke-gcloud-auth-plugin ])
       go
+      gotest
       kubectl
       kubernetes-helm
       jsonnet
@@ -48,6 +49,7 @@
       pre-commit
       argocd
       fzf
+      python313Packages.mdformat
 
       nixfmt-rfc-style
       ripgrep
