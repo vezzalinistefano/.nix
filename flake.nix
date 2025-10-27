@@ -32,7 +32,7 @@
     stylix = {
       url = "github:danth/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
-    };  
+    };
   };
 
   outputs =
@@ -43,11 +43,10 @@
       home-manager,
       ...
     }:
-
-    let
-    in
-
     {
+      # Allow unfree packages
+      nixpkgs.config.allowUnfree = true;
+
       darwinConfigurations = {
         "SWS000154" = darwin.lib.darwinSystem {
           system = "aarch64-darwin";
@@ -61,7 +60,7 @@
               home-manager.extraSpecialArgs = { inherit inputs; };
             }
           ];
-       };
+        };
       };
     };
 }

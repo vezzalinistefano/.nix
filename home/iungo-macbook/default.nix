@@ -6,7 +6,7 @@
 
 {
   imports = [
-    inputs.nixvim.homeManagerModules.nixvim
+    inputs.nixvim.homeModules.nixvim
     ../../modules/nixvim
     ./rice.nix
     ./git.nix
