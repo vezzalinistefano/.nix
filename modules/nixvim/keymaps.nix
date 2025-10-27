@@ -29,6 +29,24 @@ in
             noremap = true;
           };
         }
+        # Git - Gwrite
+        {
+          key = "<leader>gw";
+          action = ":Gwrite<CR>:q<CR>";
+          options = {
+            silent = true;
+            noremap = true;
+          };
+        }
+        # Git rebase continue
+        {
+          key = "<leader>grc";
+          action = ":G rebase --continue<CR>";
+          options = {
+            silent = true;
+            noremap = true;
+          };
+        }
         # Clipboard
         {
           key = "<leader>y";
