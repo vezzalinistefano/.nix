@@ -43,6 +43,7 @@ in
             gopls.enable = true;
             lua_ls.enable = true;
             clangd.enable = true;
+            jsonnet_ls.enable = true;
 
             pyright = {
               enable = true;
