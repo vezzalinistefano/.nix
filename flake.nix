@@ -44,9 +44,6 @@
       ...
     }:
     {
-      # Allow unfree packages
-      nixpkgs.config.allowUnfree = true;
-
       darwinConfigurations = {
         "SWS000154" = darwin.lib.darwinSystem {
           system = "aarch64-darwin";

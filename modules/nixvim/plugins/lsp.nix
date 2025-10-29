@@ -61,6 +61,8 @@ in
                 };
               };
             };
+
+            gitlab_ci_ls.enable = true;
           };
         };
 

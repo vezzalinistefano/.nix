@@ -16,12 +16,15 @@
 
   nix.settings.trusted-users = [ "stefanovezzalini" ];
 
+  nixpkgs = {
+    config = {
+      allowUnfree = true;
+    };
+  };
+
   services.yabai = {
     enable = true;
   };
-
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
 
   # Use this instead of services.nix-daemon.enable if you
   # don't wan't the daemon service to be managed for you.

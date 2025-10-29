@@ -19,6 +19,7 @@
     ../../modules/gpg
     ../../modules/kube
   ];
+
   home = {
     username = "stefanovezzalini";
     homeDirectory = "/Users/stefanovezzalini";
@@ -31,6 +32,7 @@
       (google-cloud-sdk.withExtraComponents [ google-cloud-sdk.components.gke-gcloud-auth-plugin ])
       go
       gotest
+      golangci-lint
       kubectl
       kubernetes-helm
       jsonnet
@@ -50,6 +52,7 @@
       argocd
       fzf
       python313Packages.mdformat
+      hugo
 
       nixfmt-rfc-style
       ripgrep
