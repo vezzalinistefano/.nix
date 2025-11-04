@@ -3,10 +3,8 @@
   programs = {
     nixvim = {
       filetype = {
-        "yaml.gitlab" = {
-          pattern = [
-            "%.gitlab%-ci%.ya?ml"
-          ];
+        pattern = {
+          "%.gitlab%-ci%.ya?ml" = "yaml.gitlab";
         };
       };
     };

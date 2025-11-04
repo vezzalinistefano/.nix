@@ -18,6 +18,7 @@
     ../../modules/direnv
     ../../modules/gpg
     ../../modules/kube
+    ../../modules/ghostty
   ];
 
   home = {
