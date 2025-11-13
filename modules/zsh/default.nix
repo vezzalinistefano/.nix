@@ -64,6 +64,8 @@ let
     ls = "ls --color=auto";
 
     argocd = "argocd --grpc-web";
+
+    sg = "ast-grep";
   };
 in
 {
@@ -85,7 +87,26 @@ in
     };
     initContent =
       let
-        zshConfig = lib.mkOrder 1000 "source <(kubectl completion zsh)";
+        zshConfig = lib.mkOrder 1000 ''
+          clean-worktrees() {
+            git worktree list --porcelain |
+              grep '^worktree ' |
+              cut -d' ' -f2 |
+              while read wt; do
+                branch=$(git -C "$wt" branch --show-current)
+                if [ -n "$branch" ] && ! git branch -r --contains "$branch" | grep -q .; then
+                  echo "Removing $wt ($branch)"
+                  git worktree remove "$wt" --force
+                fi
+              done
+          }
+
+          git-cleanup-orphaned() {
+            /private/etc/nix-darwin/scripts/git-cleanup-orphaned.sh "$@"
+          }
+
+          source <(kubectl completion zsh)
+        '';
       in
       lib.mkMerge [ zshConfig ];
   };

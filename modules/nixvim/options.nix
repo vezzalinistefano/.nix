@@ -29,7 +29,7 @@
         smartcase = true;
         #   case characters
         scrolloff = 8;
-        cursorline = false;
+        cursorline = true;
         cursorcolumn = false;
         signcolumn = "yes";
         laststatus = 3;

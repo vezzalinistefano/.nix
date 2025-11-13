@@ -5,6 +5,7 @@
 }:
 
 {
+  nixpkgs.config.allowUnfree = true;
   imports = [
     inputs.nixvim.homeModules.nixvim
     ../../modules/nixvim
@@ -18,7 +19,6 @@
     ../../modules/direnv
     ../../modules/gpg
     ../../modules/kube
-    ../../modules/ghostty
   ];
 
   home = {
@@ -54,6 +54,8 @@
       fzf
       python313Packages.mdformat
       hugo
+      claude-code
+      ast-grep
 
       nixfmt-rfc-style
       ripgrep

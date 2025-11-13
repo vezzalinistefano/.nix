@@ -10,8 +10,8 @@
 
   stylix.fonts = {
     monospace = {
-      package = pkgs.nerd-fonts.jetbrains-mono;
-      name = "JetBrainsMono Nerd Font";
+      package = pkgs.nerd-fonts.iosevka;
+      name = "iosevka Nerd Font";
     };
     sansSerif = {
       package = pkgs.ibm-plex;

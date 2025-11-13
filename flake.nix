@@ -51,7 +51,6 @@
             ./hosts/iungo-macbook
             home-manager.darwinModules.home-manager
             {
-              home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.users.stefanovezzalini = import ./home/iungo-macbook;
               home-manager.extraSpecialArgs = { inherit inputs; };
