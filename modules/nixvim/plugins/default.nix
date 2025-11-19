@@ -8,6 +8,7 @@
     ./telescope.nix
     ./mini.nix
     ./nix.nix
+    ./markdown.nix
   ];
 
   programs = {

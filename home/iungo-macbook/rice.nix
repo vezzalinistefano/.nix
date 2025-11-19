@@ -6,12 +6,12 @@
   stylix.polarity = "dark";
 
   stylix.base16Scheme =
-    "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
+    "${pkgs.base16-schemes}/share/themes/kanagawa-dragon.yaml";
 
   stylix.fonts = {
     monospace = {
-      package = pkgs.nerd-fonts.iosevka;
-      name = "iosevka Nerd Font";
+      package = pkgs.nerd-fonts.jetbrains-mono;
+      name = "JetBrainsMono Nerd Font Mono";
     };
     sansSerif = {
       package = pkgs.ibm-plex;
