@@ -29,5 +29,5 @@
 
   stylix.opacity.terminal = 0.90;
 
-  stylix.targets.nixvim.enable = false;
+  stylix.targets.nixvim.enable = true;
 }
