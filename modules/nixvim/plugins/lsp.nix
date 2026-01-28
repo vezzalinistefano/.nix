@@ -51,6 +51,25 @@ in
 
             terraformls = {
               enable = true;
+              config = {
+                cmd = [
+                  "terraform-ls"
+                  "serve"
+                ];
+                filetypes = [
+                  "terraform"
+                  "tf"
+                  "terraform-vars"
+                  "hcl"
+                ];
+                init_options = {
+                  experimentalFeatures = {
+                    validateOnSave = true;
+                    prefetchModule = true;
+                    prefillRequiredFields = true;
+                  };
+                };
+              };
             };
 
             nil_ls = {
