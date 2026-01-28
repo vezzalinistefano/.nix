@@ -32,6 +32,7 @@
       spotify
       (google-cloud-sdk.withExtraComponents [ google-cloud-sdk.components.gke-gcloud-auth-plugin ])
       go
+      gotools
       gotest
       golangci-lint
       kubectl
@@ -48,6 +49,11 @@
       yq
       jq
       tenv
+      tflint
+      checkov
+      trivy
+      terraform-docs
+      tfupdate
       lazygit
       pre-commit
       argocd
@@ -56,11 +62,17 @@
       hugo
       claude-code
       ast-grep
+      dbeaver-bin
+      brave
+      llama-cpp
 
       nixfmt-rfc-style
       ripgrep
       raycast
       tree
+
+      nerd-fonts.fira-code
+      nerd-fonts.hack
     ];
   };
 

@@ -6,12 +6,11 @@
   stylix.polarity = "dark";
 
   stylix.base16Scheme =
-    "${pkgs.base16-schemes}/share/themes/kanagawa-dragon.yaml";
+    "${pkgs.base16-schemes}/share/themes/pop.yaml";
 
   stylix.fonts = {
     monospace = {
-      package = pkgs.nerd-fonts.jetbrains-mono;
-      name = "JetBrainsMono Nerd Font Mono";
+      name = "Hack Nerd Font";
     };
     sansSerif = {
       package = pkgs.ibm-plex;
@@ -21,6 +20,10 @@
       package = pkgs.dejavu_fonts;
       name = "DejaVu Serif";
     };
+
+    emoji = {
+      name = "Apple Color Emoji";
+    };
     sizes = {
       terminal = 12;
       applications = 9;
@@ -29,5 +32,5 @@
 
   stylix.opacity.terminal = 0.90;
 
-  stylix.targets.nixvim.enable = true;
+  stylix.targets.nixvim.enable = false;
 }

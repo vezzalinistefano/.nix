@@ -1,5 +1,10 @@
-{ ... }:
+{ pkgs, ... }:
 {
+  home = {
+    packages = with pkgs; [
+      kustomize
+    ];
+  };
   programs = {
     kubecolor = {
       enable = true;
