@@ -60,12 +60,17 @@ let
 
     # kubectl
     k = "kubectl";
+    kctx = "kubectl config use-context $(kubectl config get-contexts --no-headers| awk '{print $2}' | fzf)";
 
     ls = "ls --color=auto";
 
     argocd = "argocd --grpc-web";
 
     sg = "ast-grep";
+
+    # Fuzzy finding
+    cdf = "cd $(find . -type d | fzf)";  # fuzzy find from current directory
+    cdw = "cd $(git worktree list | awk '{ print $1 }' | fzf)";  # fuzzy find across git worktrees
   };
 in
 {
@@ -104,6 +109,9 @@ in
           git-cleanup-orphaned() {
             /private/etc/nix-darwin/scripts/git-cleanup-orphaned.sh "$@"
           }
+
+          bindkey '^[[A' history-search-backward
+          bindkey '^[[B' history-search-forward
 
           source <(kubectl completion zsh)
         '';
