@@ -9,7 +9,7 @@
     in
     {
       devShells.${system}.default = pkgs.mkShell {
-        buildInputs = [];
+        buildInputs = [ ];
         shellHook = ''
           docker compose up -d --remove-orphans
 

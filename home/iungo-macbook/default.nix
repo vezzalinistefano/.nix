@@ -8,72 +8,75 @@
   nixpkgs.config.allowUnfree = true;
   imports = [
     inputs.nixvim.homeModules.nixvim
-    ../../modules/nixvim
-    ./rice.nix
-    ./git.nix
-    ./alacritty.nix
-    ../../modules/vscode
-    ../../modules/zsh
-    ../../modules/tmux
-    ../../modules/obsidian
-    ../../modules/direnv
+    ../../modules/age
+    ../../modules/alacritty
+    ../../modules/ansible
+    ../../modules/argocd
+    ../../modules/ast-grep
+    ../../modules/brave
+    # ../../modules/checkov  # Disabled: causes OOM during build (pulls in heavy data science deps)
+    # ../../modules/claude-code
+    ../../modules/dbeaver
+    # ../../modules/direnv
+    ../../modules/fd
+    ../../modules/fira-code-nerd-font
+    ../../modules/fzf
+    ../../modules/gemini-cli
+    ../../modules/git
+    ../../modules/glab
+    ../../modules/go
+    ../../modules/golangci-lint
+    ../../modules/google-cloud-sdk
+    ../../modules/gotest
+    ../../modules/gotools
     ../../modules/gpg
-    ../../modules/kube
+    ../../modules/hack-nerd-font
+    ../../modules/hugo
+    ../../modules/jq
+    ../../modules/jsonnet
+    ../../modules/k9s
+    ../../modules/kubecolor
+    ../../modules/kubectl
+    ../../modules/kubernetes-helm
+    ../../modules/kustomize
+    ../../modules/lazygit
+    ../../modules/llama-cpp
+    ../../modules/mdformat
+    ../../modules/nixfmt
+    ../../modules/nixvim
+    ../../modules/obsidian
+    ../../modules/pam-reattach
+    ../../modules/poetry
+    ../../modules/pre-commit
+    ../../modules/python3
+    ../../modules/raycast
+    ../../modules/ripgrep
+    ../../modules/slack
+    ../../modules/sops
+    ../../modules/spotify
+    ../../modules/stylix
+    ../../modules/swaks
+    ../../modules/tenv
+    ../../modules/terraform-docs
+    ../../modules/tfupdate
+    ../../modules/tflint
+    ../../modules/tmux
+    ../../modules/tree
+    ../../modules/trivy
+    ../../modules/utm
+    ../../modules/uv
+    ../../modules/vscode
+    ../../modules/watch
+    ../../modules/yamllint
+    ../../modules/yq
+    ../../modules/zsh
   ];
 
   home = {
     username = "stefanovezzalini";
     homeDirectory = "/Users/stefanovezzalini";
     stateVersion = "25.05";
-
-    packages = with pkgs; [
-      pam-reattach # Reattach to the user's GUI session on macOS during authentication (for Touch ID support in tmux)
-      slack
-      spotify
-      (google-cloud-sdk.withExtraComponents [ google-cloud-sdk.components.gke-gcloud-auth-plugin ])
-      go
-      gotools
-      gotest
-      golangci-lint
-      kubectl
-      kubernetes-helm
-      jsonnet
-      swaks
-      python3
-      uv
-      poetry
-      ansible
-      utm
-      sops
-      age
-      yq
-      jq
-      tenv
-      tflint
-      checkov
-      trivy
-      terraform-docs
-      tfupdate
-      lazygit
-      pre-commit
-      argocd
-      fzf
-      python313Packages.mdformat
-      hugo
-      claude-code
-      ast-grep
-      dbeaver-bin
-      brave
-      llama-cpp
-
-      nixfmt-rfc-style
-      ripgrep
-      raycast
-      tree
-
-      nerd-fonts.fira-code
-      nerd-fonts.hack
-    ];
+    sessionPath = [ "$HOME/.local/bin" ];
   };
 
   programs.home-manager.enable = true;

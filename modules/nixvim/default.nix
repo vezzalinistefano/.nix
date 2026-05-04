@@ -7,6 +7,7 @@
     ./plugins
     ./autocommands.nix
     ./filetypes.nix
+    ./ftplugins
   ];
 
   programs.nixvim = {

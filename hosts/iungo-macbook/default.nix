@@ -66,6 +66,7 @@
     EDITOR = "nvim";
     GOPATH = "/Users/stefanovezzalini/go";
     NIXPATH = "/etc/nix-darwin";
+    GOPRIVATE = "gitlab.com/iungo/*";
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.

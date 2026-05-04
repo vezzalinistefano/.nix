@@ -90,14 +90,14 @@ in
             desc = "Search current buffer";
           };
         }
-        # Telescope search commands
+        # Telescope command history
         {
           action = ":Telescope command_history<CR>";
-          key = "<leader>sc";
+          key = "<leader>sh";
           options = {
             silent = true;
             noremap = true;
-            desc = "Search commands";
+            desc = "Search command history";
           };
         }
         # Telescope search files
@@ -152,22 +152,87 @@ in
         }
         # Harpoon add
         {
-          action = ":lua require('harpoon.mark').add_file()";
+          action = helpers.mkRaw ''
+            function()
+              require("harpoon"):list():add()
+            end
+          '';
           key = "<leader>a";
           options = {
-            silent= true;
+            silent = true;
             noremap = true;
             desc = "Harpoon add file";
           };
         }
         # Harpoon menu
         {
-          action = ":lua require('harpoon.ui').toggle_quick_menu()";
-          key = "<C-e>";
+          action = helpers.mkRaw ''
+            function()
+              local harpoon = require("harpoon")
+              harpoon.ui:toggle_quick_menu(harpoon:list())
+            end
+          '';
+          key = "<leader>e";
           options = {
-            silent= true;
+            silent = true;
             noremap = true;
             desc = "Harpoon menu";
+          };
+        }
+        # Harpoon nav file 1
+        {
+          action = helpers.mkRaw ''
+            function()
+              require("harpoon"):list():select(1)
+            end
+          '';
+          key = "<leader>1";
+          options = {
+            silent = true;
+            noremap = true;
+            desc = "Harpoon nav file 1";
+          };
+        }
+        # Harpoon nav file 2
+        {
+          action = helpers.mkRaw ''
+            function()
+              require("harpoon"):list():select(2)
+            end
+          '';
+          key = "<leader>2";
+          options = {
+            silent = true;
+            noremap = true;
+            desc = "Harpoon nav file 2";
+          };
+        }
+        # Harpoon nav file 3
+        {
+          action = helpers.mkRaw ''
+            function()
+              require("harpoon"):list():select(3)
+            end
+          '';
+          key = "<leader>3";
+          options = {
+            silent = true;
+            noremap = true;
+            desc = "Harpoon nav file 3";
+          };
+        }
+        # Harpoon nav file 4
+        {
+          action = helpers.mkRaw ''
+            function()
+              require("harpoon"):list():select(4)
+            end
+          '';
+          key = "<leader>4";
+          options = {
+            silent = true;
+            noremap = true;
+            desc = "Harpoon nav file 4";
           };
         }
       ];

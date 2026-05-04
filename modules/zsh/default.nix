@@ -28,6 +28,7 @@ let
     gpd = "git push origin --delete";
     gmerg = "git merge --edit --stat --no-ff";
     gmerge = "git merge --edit --stat --no-ff";
+    gcpx = "git cherry-pick -x";
     # git: submodules
     gsupc = "git submodule update --checkout";
     # vim
@@ -48,12 +49,16 @@ let
     rm = "rm -Iv";
     # safer mv
     mv = "mv -v";
-    # nix: update nixos
-    updateNix = "sudo nixos-rebuild switch --flake ~/.nix#jupiter";
-    # home-manager: update home
-    updateHome = "nixfmt ~/.nix && home-manager switch --flake ~/.nix#sv";
-    # home-manager: update home and channel
-    updateHomePlus = "sudo -i nix-channel --update && home-manager switch --flake ~/.nix#sv";
+    # nix-darwin: rebuild and switch
+    drs = "sudo darwin-rebuild switch --flake /private/etc/nix-darwin";
+    # nix-darwin: build without switching (test first)
+    drb = "darwin-rebuild build --flake /private/etc/nix-darwin";
+    # nix-darwin: check flake syntax
+    drc = "nix flake check /private/etc/nix-darwin";
+    # nix-darwin: update packages and rebuild
+    dru = "sudo nix flake update /private/etc/nix-darwin && sudo darwin-rebuild switch --flake /private/etc/nix-darwin";
+    # nix-darwin: format nix files
+    drf = "nixfmt /private/etc/nix-darwin";
 
     git-list-untracked = "git fetch --prune && git branch -r | awk \"{print \$1}\" | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk \"{print \$1}\"";
     git-remove-untracked = "git fetch --prune && git branch -r | awk \"{print \$1}\" | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk \"{print \$1}\" | xargs git branch -d";
@@ -69,8 +74,8 @@ let
     sg = "ast-grep";
 
     # Fuzzy finding
-    cdf = "cd $(find . -type d | fzf)";  # fuzzy find from current directory
-    cdw = "cd $(git worktree list | awk '{ print $1 }' | fzf)";  # fuzzy find across git worktrees
+    cdf = "cd $(find . -type d 2> /dev/null | fzf)"; # fuzzy find from current directory
+    cdw = "cd $(git worktree list | awk '{ print $1 }' | fzf)"; # fuzzy find across git worktrees
   };
 in
 {
@@ -93,6 +98,9 @@ in
     initContent =
       let
         zshConfig = lib.mkOrder 1000 ''
+          # Cycle through completions using arrow keys
+          zstyle ':completion:*' menu select
+
           clean-worktrees() {
             git worktree list --porcelain |
               grep '^worktree ' |

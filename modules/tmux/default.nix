@@ -3,17 +3,18 @@
 {
   programs = {
     tmux = {
-        enable = true;
-        baseIndex = 1;
-        historyLimit = 10000;
-        escapeTime = 0;
-        keyMode = "vi";
-        mouse = true;
-        prefix = "C-a";
-        terminal = "tmux-256color";
-        extraConfig = ''
+      enable = true;
+      baseIndex = 1;
+      historyLimit = 10000;
+      escapeTime = 0;
+      keyMode = "vi";
+      mouse = true;
+      prefix = "C-a";
+      terminal = "tmux-256color";
+      extraConfig = ''
         bind \\ split-window -h -c "#{pane_current_path}"
         bind - split-window -v -c "#{pane_current_path}"
+        bind C new-window -c "#{pane_current_path}"
         unbind '"'
         unbind %
 
@@ -29,6 +30,12 @@
         bind -n M-k select-pane -U
         bind -n M-l select-pane -R
 
+        # Vi-mode copy keybindings with platform-aware clipboard
+        bind -T copy-mode-vi v send-keys -X begin-selection
+        if-shell 'command -v pbcopy' \
+          'bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "pbcopy"; bind -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "pbcopy"' \
+          'bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "xclip -in -selection clipboard"; bind -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "xclip -in -selection clipboard"'
+
         set -g status on
         set -g status-interval 1
         set -g status-justify left
@@ -37,23 +44,23 @@
         set -g status-left-length 100
         set -g status-left-style default
         set -g status-position bottom
-        
+
         set -g status-right " [#[fg=colour76,bg=default]%T %F#[fg=white]] \
         [#[fg=colour69]󱃾 #(kubectl config current-context)#[fg=white]]"
         set -g status-right-length 140
         set -g status-right-style default
         set -g status-style fg=white,bg=colour233
-        '';
+      '';
     };
   };
 }
 
-#            
+#
 #  _____   __
 # / __\ \ / /
-# \__ \\ V / 
-# |___/ \_/  
-#            
+# \__ \\ V /
+# |___/ \_/
+#
 # Stefano Vezzalini dotfiles
 #
 # ~/.tmux.conf
@@ -62,53 +69,53 @@
 # set -g default-terminal "tmux-256color"
 # set -ag terminal-overrides ",xterm-256color:RGB"
 # set -sg escape-time 0
-# 
+#
 # # -- Remap prefix from 'C-b' to 'C-a'
 # unbind C-b
 # set-option -g prefix C-a
 # bind-key C-a send-prefix
-# 
+#
 # bind r source-file ~/.tmux.conf
 # set -g base-index 1
-# 
+#
 # set -g mode-keys vi
 # bind -T copy-mode-vi v send-keys -X begin-selection
 # bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel 'xclip -in -selection clipboard'
-# 
+#
 # # Scrollback history.
 # set -g history-limit 10000
-# 
+#
 # set -g mouse on
 # set -g base-index 1
-# 
+#
 # # No lag after ESC.
 # set -sg escape-time 0
-# 
+#
 # # -- Split remaps
 # bind \\ split-window -h -c "#{pane_current_path}"
 # bind - split-window -v -c "#{pane_current_path}"
 # unbind '"'
 # unbind %
-# 
+#
 # # Navigate panes with prefix key + Vim motions
 # bind -r h select-pane -L
 # bind -r j select-pane -D
 # bind -r k select-pane -U
 # bind -r l select-pane -R
-# 
+#
 # # Use Alt-{h,j,k,l} without prefix key to switch panes directly.
 # bind -n M-h select-pane -L
 # bind -n M-j select-pane -D
 # bind -n M-k select-pane -U
 # bind -n M-l select-pane -R
-# 
+#
 # # Resize panes with <prefix>Ctrl-{h,j,k,l}.  Omit/adjust the number for
 # # finer adjustments.
 # bind -r C-h resize-pane -L 5
 # bind -r C-j resize-pane -D 5
 # bind -r C-k resize-pane -U 5
 # bind -r C-l resize-pane -R 5
-# 
+#
 # set -g status on
 # set -g status-interval 1
 # set -g status-justify left
@@ -117,7 +124,7 @@
 # set -g status-left-length 100
 # set -g status-left-style default
 # set -g status-position bottom
-# 
+#
 # set -g status-right " [#[fg=colour76,bg=default]%T %F#[fg=white]] \
 # [#[fg=colour69]󱃾 #(kubectl config current-context)#[fg=white]]"
 # set -g status-right-length 140

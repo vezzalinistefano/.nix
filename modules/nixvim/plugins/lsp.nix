@@ -81,6 +81,21 @@ in
               };
             };
 
+            schemastore = {
+              enable = true;
+            };
+
+            yamlls = {
+              enable = true;
+              config = {
+                schemaStore = {
+                  enable = false;
+                  url = "";
+                };
+                schemas = helpers.mkRaw "require('schemastore').yaml.schemas()";
+              };
+            };
+
             gitlab_ci_ls.enable = true;
           };
         };
@@ -92,16 +107,17 @@ in
 
         lspkind = {
           enable = true;
-
-          cmp = {
-            enable = true;
-            menu = {
-              nvim_lsp = "[LSP]";
-              nvim_lua = "[api]";
-              path = "[path]";
-              luasnip = "[snip]";
-              buffer = "[buffer]";
-              neorg = "[neorg]";
+          settings = {
+            cmp = {
+              enable = true;
+              menu = {
+                nvim_lsp = "[LSP]";
+                nvim_lua = "[api]";
+                path = "[path]";
+                luasnip = "[snip]";
+                buffer = "[buffer]";
+                neorg = "[neorg]";
+              };
             };
           };
         };

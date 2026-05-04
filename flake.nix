@@ -53,6 +53,7 @@
             {
               home-manager.useUserPackages = true;
               home-manager.users.stefanovezzalini = import ./home/iungo-macbook;
+              home-manager.backupFileExtension = "backup";
               home-manager.extraSpecialArgs = { inherit inputs; };
             }
           ];

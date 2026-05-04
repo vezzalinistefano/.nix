@@ -5,8 +5,7 @@
   stylix.enable = true;
   stylix.polarity = "dark";
 
-  stylix.base16Scheme =
-    "${pkgs.base16-schemes}/share/themes/pop.yaml";
+  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/pop.yaml";
 
   stylix.fonts = {
     monospace = {
@@ -33,4 +32,5 @@
   stylix.opacity.terminal = 0.90;
 
   stylix.targets.nixvim.enable = false;
+  stylix.targets.obsidian.enable = false;
 }

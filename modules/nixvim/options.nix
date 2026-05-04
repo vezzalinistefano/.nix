@@ -36,7 +36,12 @@
         fileencoding = "utf-8";
         termguicolors = true;
         spell = false;
-        wrap = false;
+
+        wrap = true;
+        linebreak = true;
+        breakindent = true;
+        breakindentopt = "shift:2,min:2";
+        showbreak = ">>>";
 
         # Tab options
         tabstop = 4;
