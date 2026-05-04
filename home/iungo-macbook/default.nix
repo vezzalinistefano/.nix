@@ -60,6 +60,7 @@
     ../../modules/terraform-docs
     ../../modules/tfupdate
     ../../modules/tflint
+    ../../modules/thunderbird
     ../../modules/tmux
     ../../modules/tree
     ../../modules/trivy
