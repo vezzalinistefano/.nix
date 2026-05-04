@@ -33,4 +33,6 @@
 
   stylix.targets.nixvim.enable = false;
   stylix.targets.obsidian.enable = false;
+
+  gtk.gtk4.theme = null;
 }
