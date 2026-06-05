@@ -32,7 +32,7 @@ in
         # Git - Gwrite
         {
           key = "<leader>gw";
-          action = ":Gwrite<CR>:q<CR>";
+          action = ":Gwrite<CR>";
           options = {
             silent = true;
             noremap = true;
@@ -45,6 +45,86 @@ in
           options = {
             silent = true;
             noremap = true;
+          };
+        }
+        # Git diff current file (vertical split)
+        {
+          key = "<leader>gd";
+          action = ":Gvdiff<CR>";
+          options = {
+            silent = true;
+            noremap = true;
+            desc = "Git diff";
+          };
+        }
+        # Git blame
+        {
+          key = "<leader>gb";
+          action = ":Git blame<CR>";
+          options = {
+            silent = true;
+            noremap = true;
+            desc = "Git blame";
+          };
+        }
+        # Git commit
+        {
+          key = "<leader>gc";
+          action = ":Git commit<CR>";
+          options = {
+            silent = true;
+            noremap = true;
+            desc = "Git commit";
+          };
+        }
+        # File git history into quickfix
+        {
+          key = "<leader>gh";
+          action = ":0Gclog<CR>";
+          options = {
+            silent = true;
+            noremap = true;
+            desc = "Git file history";
+          };
+        }
+        # Diffview: open working tree diff
+        {
+          key = "<leader>gv";
+          action = ":DiffviewOpen<CR>";
+          options = {
+            silent = true;
+            noremap = true;
+            desc = "Diffview open";
+          };
+        }
+        # Diffview: close
+        {
+          key = "<leader>gx";
+          action = ":DiffviewClose<CR>";
+          options = {
+            silent = true;
+            noremap = true;
+            desc = "Diffview close";
+          };
+        }
+        # Diffview: file history (current file)
+        {
+          key = "<leader>gfh";
+          action = ":DiffviewFileHistory %<CR>";
+          options = {
+            silent = true;
+            noremap = true;
+            desc = "Diffview file history";
+          };
+        }
+        # Diffview: repo history
+        {
+          key = "<leader>gfl";
+          action = ":DiffviewFileHistory<CR>";
+          options = {
+            silent = true;
+            noremap = true;
+            desc = "Diffview repo history";
           };
         }
         # Clipboard

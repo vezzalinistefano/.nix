@@ -44,6 +44,7 @@
     ../../modules/mdformat
     ../../modules/nixfmt
     ../../modules/nixvim
+    ../../modules/nmap
     ../../modules/obsidian
     ../../modules/pam-reattach
     ../../modules/poetry

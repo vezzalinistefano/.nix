@@ -12,6 +12,29 @@ in
 
       autoCmd = [
         {
+          event = [ "BufNewFile" ];
+          pattern = [ "shell.nix" ];
+          group = "StefanoVezzaliniGroup";
+          callback = helpers.mkRaw ''
+            function()
+              local lines = {
+                "{ pkgs ? import <nixpkgs> {} }:",
+                "",
+                "pkgs.mkShell {",
+                "  buildInputs = [",
+                "    pkgs.zsh",
+                "  ];",
+                "",
+                "  shellHook = '''",
+                "    exec zsh",
+                "  ''';",
+                "}",
+              }
+              vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
+            end
+          '';
+        }
+        {
           event = [ "FileType" ];
           pattern = [
             "gitcommit"

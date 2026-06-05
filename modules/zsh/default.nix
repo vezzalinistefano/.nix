@@ -19,12 +19,14 @@ let
     # git: fetch updated
     gfa = "git fetch --all";
     gfap = "git fetch --all --prune --prune-tags";
+    gfrm = "git fetch --all --prune --prune-tags && git rebase origin/master";
     gpu = "git pull && git submodule update --checkout";
     # git:branching
     gch = "git checkout";
     gchb = "git checkout -b";
     gbd = "git branch -d";
     gbl = "git branch --list";
+    gp = "git push";
     gpd = "git push origin --delete";
     gmerg = "git merge --edit --stat --no-ff";
     gmerge = "git merge --edit --stat --no-ff";
@@ -116,6 +118,13 @@ in
 
           git-cleanup-orphaned() {
             /private/etc/nix-darwin/scripts/git-cleanup-orphaned.sh "$@"
+          }
+
+          gcpxf() {
+            git log --oneline --all --color=always |
+              fzf -m --ansi --preview 'git show --color=always {1}' --preview-window=right:60% |
+              awk '{ print $1 }' |
+              xargs -r git cherry-pick -x
           }
 
           bindkey '^[[A' history-search-backward
