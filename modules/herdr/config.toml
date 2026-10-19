@@ -1,0 +1,82 @@
+onboarding = false
+
+[ui]
+status_indicators = "symbols"
+
+[ui.toast]
+delivery = "system"
+
+[theme]
+name = "kanagawa"
+auto_switch = false
+
+[worktrees]
+directory = "~/.herdr/worktrees"
+
+[keys]
+# Same prefix as tmux (modules/tmux)
+prefix = "ctrl+a"
+reload_config = "prefix+r"
+# tmux: `bind \` (side by side) and `bind -` (stacked)
+split_vertical = "prefix+backslash"
+split_horizontal = "prefix+minus"
+# tmux: `bind C` new window; prefix+c stays the herdr default
+new_tab = ["prefix+c", "prefix+shift+c"]
+# prefix+g is taken by lazygit below, same as tmux
+goto = "prefix+slash"
+edit_scrollback = "prefix+e"
+
+# Ctrl+hjkl across nvim splits and herdr panes (vim-herdr-navigation)
+[[keys.command]]
+key = "ctrl+h"
+type = "plugin_action"
+command = "vim-herdr-navigation.left"
+description = "navigate left (vim/herdr)"
+
+[[keys.command]]
+key = "ctrl+j"
+type = "plugin_action"
+command = "vim-herdr-navigation.down"
+description = "navigate down (vim/herdr)"
+
+[[keys.command]]
+key = "ctrl+k"
+type = "plugin_action"
+command = "vim-herdr-navigation.up"
+description = "navigate up (vim/herdr)"
+
+[[keys.command]]
+key = "ctrl+l"
+type = "plugin_action"
+command = "vim-herdr-navigation.right"
+description = "navigate right (vim/herdr)"
+
+# Fuzzy jump to workspaces, agents, projects (herdr-navigator)
+[[keys.command]]
+key = "prefix+t"
+type = "plugin_action"
+command = "herdr-navigator.open"
+description = "jump to anything"
+
+[[keys.command]]
+key = "prefix+shift+l"
+type = "plugin_action"
+command = "herdr-navigator.jump-back"
+description = "previous workspace"
+
+# Popups mirroring the tmux ones
+[[keys.command]]
+key = "prefix+g"
+type = "popup"
+command = "lazygit"
+width = "90%"
+height = "90%"
+description = "lazygit"
+
+[[keys.command]]
+key = "prefix+a"
+type = "popup"
+command = "claude"
+width = "85%"
+height = "85%"
+description = "scratch claude"
