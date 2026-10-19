@@ -48,6 +48,23 @@ in
             end
           '';
         }
+        # Reload buffers edited outside nvim (e.g. by Claude Code in another pane)
+        {
+          event = [
+            "FocusGained"
+            "BufEnter"
+            "TermLeave"
+          ];
+          pattern = "*";
+          group = "StefanoVezzaliniGroup";
+          callback = helpers.mkRaw ''
+            function()
+                if vim.fn.mode() ~= "c" then
+                    vim.cmd("checktime")
+                end
+            end
+          '';
+        }
         {
           event = [ "BufWinEnter" ];
           pattern = "*";

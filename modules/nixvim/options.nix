@@ -18,6 +18,7 @@
         colorcolumn = "80";
 
         swapfile = false;
+        autoread = true;
         modeline = true;
         modelines = 100;
         undofile = true;

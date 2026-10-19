@@ -16,6 +16,8 @@ in
     ./mini.nix
     ./nix.nix
     ./markdown.nix
+    ./claudecode.nix
+    ./herdr-nav.nix
   ];
 
   programs = {

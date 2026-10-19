@@ -315,6 +315,47 @@ in
             desc = "Harpoon nav file 4";
           };
         }
+        # Claude send selection
+        {
+          key = "<leader>is";
+          action = "<cmd>ClaudeCodeSend<CR>";
+          mode = "v";
+          options = {
+            silent = true;
+            noremap = true;
+            desc = "Claude send selection";
+          };
+        }
+        # Claude add buffer
+        {
+          key = "<leader>ib";
+          action = "<cmd>ClaudeCodeAdd %<CR>";
+          options = {
+            silent = true;
+            noremap = true;
+            desc = "Claude add buffer";
+          };
+        }
+        # Claude accept diff
+        {
+          key = "<leader>ia";
+          action = "<cmd>ClaudeCodeDiffAccept<CR>";
+          options = {
+            silent = true;
+            noremap = true;
+            desc = "Claude accept diff";
+          };
+        }
+        # Claude deny diff
+        {
+          key = "<leader>id";
+          action = "<cmd>ClaudeCodeDiffDeny<CR>";
+          options = {
+            silent = true;
+            noremap = true;
+            desc = "Claude deny diff";
+          };
+        }
       ];
     };
   };
