@@ -75,6 +75,9 @@ let
 
     sg = "ast-grep";
 
+    # claude code session reachable from a telegram bot
+    tg = "claude --channels plugin:telegram@claude-plugins-official";
+
     # Fuzzy finding
     cdf = "cd $(find . -type d 2> /dev/null | fzf)"; # fuzzy find from current directory
     cdw = "cd $(git worktree list | awk '{ print $1 }' | fzf)"; # fuzzy find across git worktrees
@@ -120,12 +123,58 @@ in
             /private/etc/nix-darwin/scripts/git-cleanup-orphaned.sh "$@"
           }
 
+          # Fuzzy-pick a git repo or worktree and open/attach its tmux session
+          tmux-sessionizer() {
+            local -a roots
+            if [ -n "$PROJECT_ROOTS" ]; then
+              roots=(''${=PROJECT_ROOTS})
+            else
+              roots=("$HOME/projects" /private/etc/nix-darwin)
+            fi
+
+            local dir
+            dir=$(
+              fd --hidden --no-ignore --max-depth 6 --type d --type f '^\.git$' "''${roots[@]}" 2>/dev/null |
+                sed 's|/\.git/\{0,1\}$||' |
+                sort -u |
+                fzf --prompt='project > ' --height=60% --reverse \
+                    --preview 'git -C {} log --oneline --decorate -15 --color=always 2>/dev/null'
+            ) || return
+            [ -n "$dir" ] || return
+
+            # Repos split across worktrees share a parent dir, so their basenames
+            # collide (master, feat/..., fix/...): name those <parent>/<path below it>
+            local name common container
+            common=$(git -C "$dir" rev-parse --path-format=absolute --git-common-dir 2>/dev/null)
+            container=$(dirname "$(dirname "$common")")
+            name=$(basename "$dir")
+            if [ -n "$common" ] && [ "$(git -C "$dir" worktree list | wc -l)" -gt 1 ]; then
+              case "$dir" in
+                "$container"/*) name="$(basename "$container")/''${dir#$container/}" ;;
+              esac
+            fi
+            # tmux forbids '.' and ':' in session names
+            name=''${name//[.:]/_}
+
+            # New sessions open as nvim | claude
+            if ! tmux has-session -t="$name" 2>/dev/null; then
+              tmux-dev-layout "$dir" "$(tmux new-session -ds "$name" -c "$dir" -P -F '#{pane_id}')"
+            fi
+            if [ -n "$TMUX" ]; then
+              tmux switch-client -t "$name"
+            else
+              tmux attach-session -t "$name"
+            fi
+          }
+
           gcpxf() {
             git log --oneline --all --color=always |
               fzf -m --ansi --preview 'git show --color=always {1}' --preview-window=right:60% |
               awk '{ print $1 }' |
               xargs -r git cherry-pick -x
           }
+
+          bindkey -s '^f' 'tmux-sessionizer\n'
 
           bindkey '^[[A' history-search-backward
           bindkey '^[[B' history-search-forward

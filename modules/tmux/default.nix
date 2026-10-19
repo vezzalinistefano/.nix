@@ -1,9 +1,17 @@
-{ ... }:
+{ pkgs, ... }:
 
+let
+  tmux-dev-layout = pkgs.writeShellScriptBin "tmux-dev-layout" (
+    builtins.readFile ./tmux-dev-layout.sh
+  );
+in
 {
+  home.packages = [ tmux-dev-layout ];
+
   programs = {
     tmux = {
       enable = true;
+      focusEvents = true;
       baseIndex = 1;
       historyLimit = 10000;
       escapeTime = 0;
@@ -11,7 +19,33 @@
       mouse = true;
       prefix = "C-a";
       terminal = "tmux-256color";
+      plugins = with pkgs.tmuxPlugins; [
+        {
+          plugin = resurrect;
+          extraConfig = ''
+            set -g @resurrect-strategy-nvim 'session'
+            set -g @resurrect-processes '"~claude->claude --continue" lazygit'
+          '';
+        }
+        {
+          plugin = continuum;
+          extraConfig = ''
+            set -g @continuum-restore 'on'
+            set -g @continuum-save-interval '15'
+          '';
+        }
+      ];
       extraConfig = ''
+        # Shift+Enter & co. reach Claude Code; truecolor in Ghostty
+        set -s extended-keys on
+        set -as terminal-features ',xterm-ghostty:RGB:extkeys'
+        # Let Claude Code's OSC notifications through to Ghostty
+        set -g allow-passthrough on
+        set -g set-clipboard on
+        set -g renumber-windows on
+
+        bind r source-file ~/.config/tmux/tmux.conf \; display "tmux.conf reloaded"
+
         bind \\ split-window -h -c "#{pane_current_path}"
         bind - split-window -v -c "#{pane_current_path}"
         bind C new-window -c "#{pane_current_path}"
@@ -50,6 +84,22 @@
         set -g status-right-length 140
         set -g status-right-style default
         set -g status-style fg=white,bg=colour233
+
+        # Claude Code hooks ring the bell when waiting (see modules/claude-code)
+        set -g monitor-bell on
+        set -g bell-action other
+        set -g window-status-bell-style 'fg=colour233,bg=colour214,bold'
+        set -g window-status-format ' #I:#W#{?@claude, 󰚩,}#{window_flags} '
+        set -g window-status-current-format ' #I:#W#{?@claude, 󰚩,}#{window_flags} '
+
+        # Popups: lazygit, and a persistent scratch Claude per session (prefix a toggles)
+        bind g display-popup -E -w 90% -h 90% -d "#{pane_current_path}" lazygit
+        bind a if-shell -F '#{m:claude-*,#{session_name}}' \
+          'detach-client' \
+          'display-popup -E -w 85% -h 85% -d "#{pane_current_path}" "TMUX= tmux new-session -A -s \"claude-#{session_name}\" claude"'
+
+        # nvim | claude split in the current window
+        bind D run-shell 'tmux-dev-layout "#{pane_current_path}" "#{pane_id}"'
       '';
     };
   };
