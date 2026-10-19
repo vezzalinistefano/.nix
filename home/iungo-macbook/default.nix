@@ -14,12 +14,14 @@
     ../../modules/argocd
     ../../modules/ast-grep
     ../../modules/brave
+    ../../modules/bun
     # ../../modules/checkov  # Disabled: causes OOM during build (pulls in heavy data science deps)
     # ../../modules/claude-code
     ../../modules/dbeaver
     # ../../modules/direnv
     ../../modules/fd
     ../../modules/fira-code-nerd-font
+    ../../modules/fleetctl
     ../../modules/fzf
     ../../modules/gemini-cli
     ../../modules/git
@@ -31,6 +33,7 @@
     ../../modules/gotools
     ../../modules/gpg
     ../../modules/hack-nerd-font
+    ../../modules/herdr
     ../../modules/hugo
     ../../modules/jq
     ../../modules/jsonnet
@@ -62,6 +65,7 @@
     ../../modules/tfupdate
     ../../modules/tflint
     ../../modules/thunderbird
+    ../../modules/telegram-desktop
     ../../modules/tmux
     ../../modules/tree
     ../../modules/trivy

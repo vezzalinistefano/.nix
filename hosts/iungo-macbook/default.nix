@@ -4,6 +4,12 @@
   ...
 }:
 {
+  imports = [
+    ./homebrew.nix
+    ../../modules/skhd
+    ../../modules/openssh
+  ];
+
   networking = {
     hostName = "SWS000154";
   };

@@ -33,6 +33,12 @@
       url = "github:danth/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Terminal workspace manager for AI coding agents, not packaged in nixpkgs.
+    # nixpkgs is not followed: upstream needs zig_0_16 and a pinned rust toolchain
+    herdr = {
+      url = "github:herdrdev/herdr/v0.9.3";
+    };
   };
 
   outputs =
