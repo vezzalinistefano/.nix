@@ -51,6 +51,7 @@
     ../../modules/obsidian
     ../../modules/pam-reattach
     ../../modules/poetry
+    ../../modules/poppler
     ../../modules/pre-commit
     ../../modules/python3
     ../../modules/raycast
