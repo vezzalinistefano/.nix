@@ -8,6 +8,7 @@
     ./homebrew.nix
     ../../modules/skhd
     ../../modules/openssh
+    ../../modules/spotifast/darwin.nix
   ];
 
   networking = {
