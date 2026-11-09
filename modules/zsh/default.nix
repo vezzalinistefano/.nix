@@ -58,7 +58,7 @@ let
     # nix-darwin: check flake syntax
     drc = "nix flake check /private/etc/nix-darwin";
     # nix-darwin: update packages and rebuild
-    dru = "sudo nix flake update /private/etc/nix-darwin && sudo darwin-rebuild switch --flake /private/etc/nix-darwin";
+    dru = "nix flake update --flake /private/etc/nix-darwin && sudo darwin-rebuild switch --flake /private/etc/nix-darwin";
     # nix-darwin: format nix files
     drf = "nixfmt /private/etc/nix-darwin";
 
