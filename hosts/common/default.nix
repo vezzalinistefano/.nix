@@ -65,6 +65,25 @@
   # and let LinearMouse (modules/linearmouse) reverse the mouse only.
   system.defaults.NSGlobalDomain."com.apple.swipescrolldirection" = false;
 
+  # Keep Italian - Pro and add U.S. International - PC (dead keys: ' + e = é, ` + a = à, " + u = ü).
+  # Switch layouts with Ctrl+Space or the menu bar; takes effect after logging out and in.
+  system.defaults.CustomUserPreferences."com.apple.HIToolbox".AppleEnabledInputSources = [
+    {
+      InputSourceKind = "Keyboard Layout";
+      "KeyboardLayout ID" = 223;
+      "KeyboardLayout Name" = "Italian - Pro";
+    }
+    {
+      InputSourceKind = "Keyboard Layout";
+      "KeyboardLayout ID" = 15000;
+      "KeyboardLayout Name" = "USInternational-PC";
+    }
+    {
+      "Bundle ID" = "com.apple.CharacterPaletteIM";
+      InputSourceKind = "Non Keyboard Input Method";
+    }
+  ];
+
   # Set your time zone.
   # comment this due to the issue:
   #   https://github.com/LnL7/nix-darwin/issues/359
