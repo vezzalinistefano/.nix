@@ -65,6 +65,7 @@
     ../../modules/stylix
     ../../modules/swaks
     ../../modules/tenv
+    ../../modules/terminal-notifier
     ../../modules/terraform-docs
     ../../modules/tfupdate
     ../../modules/tflint
