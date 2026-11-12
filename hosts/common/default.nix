@@ -9,6 +9,7 @@
     ../../modules/skhd
     ../../modules/openssh
     ../../modules/brave/darwin.nix
+    ../../modules/ghostty/darwin.nix
     ../../modules/dbeaver/darwin.nix
     ../../modules/raycast/darwin.nix
     ../../modules/slack/darwin.nix

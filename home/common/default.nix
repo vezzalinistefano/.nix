@@ -24,6 +24,7 @@
     ../../modules/fleetctl
     ../../modules/fzf
     ../../modules/gemini-cli
+    ../../modules/ghostty
     ../../modules/git
     ../../modules/glab
     ../../modules/go
