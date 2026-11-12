@@ -51,23 +51,21 @@ in
 
             terraformls = {
               enable = true;
-              config = {
-                cmd = [
-                  "terraform-ls"
-                  "serve"
-                ];
-                filetypes = [
-                  "terraform"
-                  "tf"
-                  "terraform-vars"
-                  "hcl"
-                ];
-                init_options = {
-                  experimentalFeatures = {
-                    validateOnSave = true;
-                    prefetchModule = true;
-                    prefillRequiredFields = true;
-                  };
+              cmd = [
+                "terraform-ls"
+                "serve"
+              ];
+              filetypes = [
+                "terraform"
+                "tf"
+                "terraform-vars"
+                "hcl"
+              ];
+              extraOptions.init_options = {
+                experimentalFeatures = {
+                  validateOnSave = true;
+                  prefetchModule = true;
+                  prefillRequiredFields = true;
                 };
               };
             };
@@ -81,23 +79,18 @@ in
               };
             };
 
-            schemastore = {
-              enable = true;
-            };
-
-            yamlls = {
-              enable = true;
-              config = {
-                schemaStore = {
-                  enable = false;
-                  url = "";
-                };
-                schemas = helpers.mkRaw "require('schemastore').yaml.schemas()";
-              };
-            };
+            # Schemas come from plugins.schemastore below.
+            yamlls.enable = true;
 
             gitlab_ci_ls.enable = true;
           };
+        };
+
+        # SchemaStore catalog for yamlls (wires settings.yaml.schemas and disables the built-in store).
+        # jsonls is not enabled, so the json half is off.
+        schemastore = {
+          enable = true;
+          json.enable = false;
         };
 
         luasnip.enable = true;

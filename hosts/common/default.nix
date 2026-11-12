@@ -8,11 +8,17 @@
     ./homebrew.nix
     ../../modules/skhd
     ../../modules/openssh
+    ../../modules/brave/darwin.nix
+    ../../modules/ghostty/darwin.nix
+    ../../modules/dbeaver/darwin.nix
+    ../../modules/raycast/darwin.nix
+    ../../modules/slack/darwin.nix
+    ../../modules/spotify/darwin.nix
+    ../../modules/spotifast/darwin.nix
+    ../../modules/telegram-desktop/darwin.nix
+    ../../modules/thunderbird/darwin.nix
+    ../../modules/utm/darwin.nix
   ];
-
-  networking = {
-    hostName = "SWS000154";
-  };
 
   # enable flakes globally
   nix.settings.experimental-features = [
@@ -54,6 +60,29 @@
     touchIdAuth = true;
     reattach = true;
   };
+
+  # macOS has one scroll setting for mouse and trackpad. Keep it off (trackpad scrolls "normally")
+  # and let LinearMouse (modules/linearmouse) reverse the mouse only.
+  system.defaults.NSGlobalDomain."com.apple.swipescrolldirection" = false;
+
+  # Keep Italian - Pro and add U.S. International - PC (dead keys: ' + e = é, ` + a = à, " + u = ü).
+  # Switch layouts with Ctrl+Space or the menu bar; takes effect after logging out and in.
+  system.defaults.CustomUserPreferences."com.apple.HIToolbox".AppleEnabledInputSources = [
+    {
+      InputSourceKind = "Keyboard Layout";
+      "KeyboardLayout ID" = 223;
+      "KeyboardLayout Name" = "Italian - Pro";
+    }
+    {
+      InputSourceKind = "Keyboard Layout";
+      "KeyboardLayout ID" = 15000;
+      "KeyboardLayout Name" = "USInternational-PC";
+    }
+    {
+      "Bundle ID" = "com.apple.CharacterPaletteIM";
+      InputSourceKind = "Non Keyboard Input Method";
+    }
+  ];
 
   # Set your time zone.
   # comment this due to the issue:

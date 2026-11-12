@@ -1,6 +1,5 @@
 {
   inputs,
-  pkgs,
   ...
 }:
 
@@ -24,6 +23,7 @@
     ../../modules/fleetctl
     ../../modules/fzf
     ../../modules/gemini-cli
+    ../../modules/ghostty
     ../../modules/git
     ../../modules/glab
     ../../modules/go
@@ -43,12 +43,14 @@
     ../../modules/kubernetes-helm
     ../../modules/kustomize
     ../../modules/lazygit
+    ../../modules/linearmouse
     ../../modules/llama-cpp
     ../../modules/mdformat
     ../../modules/nixfmt
     ../../modules/nixvim
     ../../modules/nmap
     ../../modules/obsidian
+    # ../../modules/opencode # nixpkgs opencode 2.2.5 node_modules fails to build; installed via Homebrew
     ../../modules/pam-reattach
     ../../modules/poetry
     ../../modules/poppler
@@ -62,6 +64,7 @@
     ../../modules/stylix
     ../../modules/swaks
     ../../modules/tenv
+    ../../modules/terminal-notifier
     ../../modules/terraform-docs
     ../../modules/tfupdate
     ../../modules/tflint

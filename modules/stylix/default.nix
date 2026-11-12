@@ -33,6 +33,6 @@
 
   stylix.targets.nixvim.enable = false;
   stylix.targets.obsidian.enable = false;
-
-  gtk.gtk4.theme = null;
+  # GTK has no effect on macOS, and stylix's gtk4 theme clashes with home-manager's gtk.gtk4.theme
+  stylix.targets.gtk.enable = false;
 }
