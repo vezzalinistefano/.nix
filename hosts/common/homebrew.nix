@@ -11,6 +11,7 @@
     brews = [
       # Development tools
       "libpq"
+      "opencode" # nixpkgs build broken (2.2.5 node_modules)
     ];
     casks = [
       # Applications that benefit from Homebrew's installation/update mechanism

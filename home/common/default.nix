@@ -51,6 +51,7 @@
     ../../modules/nixvim
     ../../modules/nmap
     ../../modules/obsidian
+    # ../../modules/opencode # nixpkgs opencode 2.2.5 node_modules fails to build; installed via Homebrew
     ../../modules/pam-reattach
     ../../modules/poetry
     ../../modules/poppler
