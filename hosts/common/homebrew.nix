@@ -4,7 +4,8 @@
     enable = true;
     onActivation = {
       autoUpdate = true;
-      cleanup = "zap";
+      # "zap"/"uninstall" make nix-darwin call `brew bundle --cleanup`, which Homebrew 7 removed
+      cleanup = "none";
       upgrade = true;
     };
     brews = [
