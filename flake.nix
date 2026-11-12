@@ -43,9 +43,7 @@
 
   outputs =
     inputs@{
-      self,
       darwin,
-      nixpkgs,
       home-manager,
       ...
     }:
@@ -79,6 +77,6 @@
       };
 
       # `nix fmt` formats every .nix file in the repo with nixfmt
-      formatter.aarch64-darwin = nixpkgs.legacyPackages.aarch64-darwin.nixfmt-tree;
+      formatter.aarch64-darwin = inputs.nixpkgs.legacyPackages.aarch64-darwin.nixfmt-tree;
     };
 }

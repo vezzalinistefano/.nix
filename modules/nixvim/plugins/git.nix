@@ -14,11 +14,21 @@ in
           enable = true;
           settings = {
             signs = {
-              add = { text = "▎"; };
-              change = { text = "▎"; };
-              delete = { text = ""; };
-              topdelete = { text = ""; };
-              changedelete = { text = "▎"; };
+              add = {
+                text = "▎";
+              };
+              change = {
+                text = "▎";
+              };
+              delete = {
+                text = "";
+              };
+              topdelete = {
+                text = "";
+              };
+              changedelete = {
+                text = "▎";
+              };
             };
             on_attach = helpers.mkRaw ''
               function(bufnr)

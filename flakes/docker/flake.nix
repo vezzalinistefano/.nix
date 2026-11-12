@@ -2,7 +2,7 @@
   description = "Docker environment flake";
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
   outputs =
-    { self, nixpkgs }:
+    { nixpkgs }:
     let
       system = "aarch64-darwin"; # Adjust for your system (e.g., "aarch64-darwin" for macOS)
       pkgs = import nixpkgs { inherit system; };
