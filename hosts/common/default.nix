@@ -11,10 +11,6 @@
     ../../modules/spotifast/darwin.nix
   ];
 
-  networking = {
-    hostName = "SWS000154";
-  };
-
   # enable flakes globally
   nix.settings.experimental-features = [
     "nix-command"

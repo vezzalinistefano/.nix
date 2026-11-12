@@ -49,21 +49,33 @@
       home-manager,
       ...
     }:
-    {
-      darwinConfigurations = {
-        "SWS000154" = darwin.lib.darwinSystem {
-          system = "aarch64-darwin";
+    let
+      # Every host shares ./hosts/common and ./home/common;
+      # ./hosts/<hostname> only holds machine-specific overrides.
+      mkDarwinHost =
+        {
+          hostname,
+          system ? "aarch64-darwin",
+          username ? "stefanovezzalini",
+        }:
+        darwin.lib.darwinSystem {
+          inherit system;
           modules = [
-            ./hosts/iungo-macbook
+            ./hosts/${hostname}
             home-manager.darwinModules.home-manager
             {
               home-manager.useUserPackages = true;
-              home-manager.users.stefanovezzalini = import ./home/iungo-macbook;
+              home-manager.users.${username} = import ./home/common;
               home-manager.backupFileExtension = "backup";
               home-manager.extraSpecialArgs = { inherit inputs; };
             }
           ];
         };
+    in
+    {
+      darwinConfigurations = {
+        "SWS000154" = mkDarwinHost { hostname = "SWS000154"; };
+        "SWS000135" = mkDarwinHost { hostname = "SWS000135"; };
       };
 
       # `nix fmt` formats every .nix file in the repo with nixfmt
