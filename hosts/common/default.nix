@@ -61,6 +61,10 @@
     reattach = true;
   };
 
+  # macOS has one scroll setting for mouse and trackpad. Keep it off (trackpad scrolls "normally")
+  # and let LinearMouse (modules/linearmouse) reverse the mouse only.
+  system.defaults.NSGlobalDomain."com.apple.swipescrolldirection" = false;
+
   # Set your time zone.
   # comment this due to the issue:
   #   https://github.com/LnL7/nix-darwin/issues/359

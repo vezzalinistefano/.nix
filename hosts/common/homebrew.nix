@@ -14,6 +14,8 @@
     ];
     casks = [
       # Applications that benefit from Homebrew's installation/update mechanism
+      # Per-device scroll direction (not in nixpkgs); configured in modules/linearmouse
+      "linearmouse"
     ];
     taps = [
       # Add custom taps if needed in future

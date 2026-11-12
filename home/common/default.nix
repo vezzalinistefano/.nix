@@ -44,6 +44,7 @@
     ../../modules/kubernetes-helm
     ../../modules/kustomize
     ../../modules/lazygit
+    ../../modules/linearmouse
     ../../modules/llama-cpp
     ../../modules/mdformat
     ../../modules/nixfmt
