@@ -16,8 +16,10 @@ This is Stefano Vezzalini's personal nix-darwin configuration managing macOS sys
 ### Directory Structure
 ```
 ├── flake.nix                    # Main flake configuration
-├── hosts/iungo-macbook/         # Host-specific system configuration
-├── home/iungo-macbook/          # User home-manager configuration
+├── hosts/common/                # System configuration shared by all hosts
+├── hosts/<HOSTNAME>/            # Per-host overrides (hostName); one dir per machine
+├── home/common/                 # User home-manager configuration shared by all hosts
+├── docs/wiki/                   # Wiki pages (e.g. new-host setup guide)
 ├── modules/                     # Reusable configuration modules
 │   ├── nixvim/                  # Neovim configuration
 │   ├── zsh/                     # Shell configuration
@@ -40,15 +42,15 @@ This is Stefano Vezzalini's personal nix-darwin configuration managing macOS sys
 - `nixvim`: Neovim configuration framework
 - `stylix`: System theming
 
-### System Configuration (`hosts/iungo-macbook/default.nix`)
-- Hostname: SWS000154
+### System Configuration (`hosts/common/default.nix`)
+- Hosts: SWS000154, SWS000135 (built via `mkDarwinHost` in `flake.nix`)
 - TouchID sudo authentication
 - Automatic garbage collection and store optimization
 - Yabai window manager
 - System packages: neovim, git
 - Environment variables: EDITOR, GOPATH, NIXPATH
 
-### User Environment (`home/iungo-macbook/default.nix`)
+### User Environment (`home/common/default.nix`)
 Core packages installed:
 - **Development:** go, python3, nodejs tools, kubernetes tools
 - **Cloud/DevOps:** google-cloud-sdk, kubectl, helm, terraform (tenv), ansible
@@ -100,7 +102,7 @@ echo "use flake" > .envrc && direnv allow
 
 ## Styling and Theming
 
-### Stylix Configuration (`home/iungo-macbook/rice.nix`)
+### Stylix Configuration (`modules/stylix/default.nix`)
 - Base16 Kanagawa Dragon color scheme
 - Dark mode preference
 - Font stack:
@@ -116,9 +118,11 @@ echo "use flake" > .envrc && direnv allow
 ```bash
 # Apply darwin configuration
 darwin-rebuild switch --flake /private/etc/nix-darwin
+# (the flake attribute is picked from the machine hostname; or pass .#<HOSTNAME>)
 
-# Apply home-manager configuration  
-home-manager switch --flake /private/etc/nix-darwin
+# home-manager runs as a nix-darwin module, so there is no separate home-manager switch;
+# the same command applies both. Build without applying:
+darwin-rebuild build --flake /private/etc/nix-darwin
 ```
 
 ### Git Workflow Support
@@ -160,6 +164,16 @@ home-manager switch --flake /private/etc/nix-darwin
 - **Reproducible**: Flake.lock pins all dependencies
 - **User-Centric**: Home-manager for user-space configuration
 - **Development-Focused**: Rich tooling for software engineering
+
+## Switchable apps (nix or Homebrew)
+GUI apps with a nixpkgs package and a Homebrew cask (spotify, brave, dbeaver, raycast, slack, telegram-desktop, thunderbird, utm) can be installed from either. Each folder holds `app.nix` (name, package, cask, default), `default.nix` (home-manager half) and `darwin.nix` (adds the cask), all built by `modules/lib/mk-switchable-app.nix`. Switch per host in `hosts/<HOSTNAME>/default.nix`:
+```nix
+apps.spotify.source = "nix";   # or "homebrew"
+```
+Defaults live in each `app.nix` (spotify is "homebrew", the rest "nix"). To add an app: copy an existing folder and import its `darwin.nix` in `hosts/common/default.nix` and its `default.nix` in `home/common/default.nix`.
+
+## Adding a Host
+See `docs/wiki/new-host-setup.md` (and `docs/wiki/managing-apps.md` for installing and updating apps). In short: create `hosts/<HOSTNAME>/default.nix` (imports `../common`, sets `networking.hostName`) and add `"<HOSTNAME>" = mkDarwinHost { hostname = "<HOSTNAME>"; };` to `flake.nix`.
 
 ## Extension Points
 - Add new modules in `modules/` directory
