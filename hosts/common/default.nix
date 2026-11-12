@@ -8,7 +8,15 @@
     ./homebrew.nix
     ../../modules/skhd
     ../../modules/openssh
+    ../../modules/brave/darwin.nix
+    ../../modules/dbeaver/darwin.nix
+    ../../modules/raycast/darwin.nix
+    ../../modules/slack/darwin.nix
+    ../../modules/spotify/darwin.nix
     ../../modules/spotifast/darwin.nix
+    ../../modules/telegram-desktop/darwin.nix
+    ../../modules/thunderbird/darwin.nix
+    ../../modules/utm/darwin.nix
   ];
 
   # enable flakes globally

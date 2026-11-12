@@ -1,6 +1,1 @@
-{ pkgs, ... }:
-{
-  home.packages = with pkgs; [
-    brave
-  ];
-}
+(import ../lib/mk-switchable-app.nix (import ./app.nix)).home
