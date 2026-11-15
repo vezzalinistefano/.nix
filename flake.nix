@@ -34,6 +34,25 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Declarative disk partitioning, used by nixos-anywhere to install NixOS hosts remotely
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Hardware quirks per laptop model (callisto is a ThinkPad T480)
+    nixos-hardware = {
+      url = "github:NixOS/nixos-hardware";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Native Spotify client, not in nixpkgs. The Macs get it from the Homebrew tap
+    # (modules/spotifast/darwin.nix); callisto builds this from source.
+    spotifast = {
+      url = "github:crmne/spotifast/v0.17.1";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Terminal workspace manager for AI coding agents, not packaged in nixpkgs.
     # nixpkgs is not followed: upstream needs zig_0_16 and a pinned rust toolchain
     herdr = {
@@ -43,13 +62,14 @@
 
   outputs =
     inputs@{
+      nixpkgs,
       darwin,
       home-manager,
       ...
     }:
     let
-      # Every host shares ./hosts/common and ./home/common;
-      # ./hosts/<hostname> only holds machine-specific overrides.
+      # Every host shares ./home/common. The Macs also share ./hosts/common, and
+      # ./hosts/<hostname> only holds their machine-specific overrides.
       mkDarwinHost =
         {
           hostname,
@@ -63,7 +83,36 @@
             home-manager.darwinModules.home-manager
             {
               home-manager.useUserPackages = true;
-              home-manager.users.${username} = import ./home/common;
+              home-manager.users.${username}.imports = [
+                ./home/common
+                ./home/darwin
+                ./home/work
+              ];
+              home-manager.backupFileExtension = "backup";
+              home-manager.extraSpecialArgs = { inherit inputs; };
+            }
+          ];
+        };
+
+      # NixOS hosts keep their whole system configuration in ./hosts/<hostname>.
+      mkNixosHost =
+        {
+          hostname,
+          system ? "x86_64-linux",
+          username ? "sv",
+        }:
+        nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs username; };
+          modules = [
+            ./hosts/${hostname}
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useUserPackages = true;
+              home-manager.users.${username}.imports = [
+                ./home/common
+                ./home/linux
+              ];
               home-manager.backupFileExtension = "backup";
               home-manager.extraSpecialArgs = { inherit inputs; };
             }
@@ -74,6 +123,10 @@
       darwinConfigurations = {
         "SWS000154" = mkDarwinHost { hostname = "SWS000154"; };
         "SWS000135" = mkDarwinHost { hostname = "SWS000135"; };
+      };
+
+      nixosConfigurations = {
+        "callisto" = mkNixosHost { hostname = "callisto"; };
       };
 
       # `nix fmt` formats every .nix file in the repo with nixfmt

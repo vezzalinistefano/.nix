@@ -68,7 +68,7 @@ in
         bind -T copy-mode-vi v send-keys -X begin-selection
         if-shell 'command -v pbcopy' \
           'bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "pbcopy"; bind -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "pbcopy"' \
-          'bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "xclip -in -selection clipboard"; bind -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "xclip -in -selection clipboard"'
+          'bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "wl-copy"; bind -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "wl-copy"'
 
         set -g status on
         set -g status-interval 1

@@ -20,9 +20,14 @@
       name = "DejaVu Serif";
     };
 
-    emoji = {
-      name = "Apple Color Emoji";
-    };
+    emoji =
+      if pkgs.stdenv.hostPlatform.isDarwin then
+        { name = "Apple Color Emoji"; }
+      else
+        {
+          package = pkgs.noto-fonts-color-emoji;
+          name = "Noto Color Emoji";
+        };
     sizes = {
       terminal = 12;
       applications = 9;
@@ -33,6 +38,11 @@
 
   stylix.targets.nixvim.enable = false;
   stylix.targets.obsidian.enable = false;
-  # GTK has no effect on macOS, and stylix's gtk4 theme clashes with home-manager's gtk.gtk4.theme
+  # GTK has no effect on macOS, and stylix's gtk4 theme clashes with home-manager's gtk.gtk4.theme.
+  # Kept off on Linux too for now: GTK apps there are untested with it.
   stylix.targets.gtk.enable = false;
+  # Not using a Qt, KDE or GNOME desktop: skip the theme engines stylix would install on Linux
+  stylix.targets.qt.enable = false;
+  stylix.targets.kde.enable = false;
+  stylix.targets.gnome.enable = false;
 }

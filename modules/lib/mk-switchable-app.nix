@@ -36,6 +36,9 @@
       ...
     }:
     {
-      home.packages = lib.optional (osConfig.apps.${name}.source == "nix") pkgs.${package};
+      # `apps.<name>` only exists on nix-darwin; elsewhere this half installs nothing
+      home.packages = lib.optional (
+        pkgs.stdenv.hostPlatform.isDarwin && osConfig.apps.${name}.source == "nix"
+      ) pkgs.${package};
     };
 }

@@ -3,6 +3,8 @@
   ...
 }:
 
+# Shared by every host, macOS and NixOS. Platform and work-only parts live in
+# ../darwin, ../linux and ../work; flake.nix picks the set for each host.
 {
   nixpkgs.config.allowUnfree = true;
   imports = [
@@ -10,25 +12,18 @@
     ../../modules/age
     ../../modules/alacritty
     ../../modules/ansible
-    ../../modules/argocd
     ../../modules/ast-grep
-    ../../modules/brave
     ../../modules/bun
     # ../../modules/checkov  # Disabled: causes OOM during build (pulls in heavy data science deps)
     # ../../modules/claude-code
-    ../../modules/dbeaver
     # ../../modules/direnv
     ../../modules/fd
     ../../modules/fira-code-nerd-font
-    ../../modules/fleetctl
     ../../modules/fzf
-    ../../modules/gemini-cli
     ../../modules/ghostty
     ../../modules/git
-    ../../modules/glab
     ../../modules/go
     ../../modules/golangci-lint
-    ../../modules/google-cloud-sdk
     ../../modules/gotest
     ../../modules/gotools
     ../../modules/gpg
@@ -37,13 +32,7 @@
     ../../modules/hugo
     ../../modules/jq
     ../../modules/jsonnet
-    ../../modules/k9s
-    ../../modules/kubecolor
-    ../../modules/kubectl
-    ../../modules/kubernetes-helm
-    ../../modules/kustomize
     ../../modules/lazygit
-    ../../modules/linearmouse
     ../../modules/llama-cpp
     ../../modules/mdformat
     ../../modules/nixfmt
@@ -51,31 +40,18 @@
     ../../modules/nmap
     ../../modules/obsidian
     # ../../modules/opencode # nixpkgs opencode 2.2.5 node_modules fails to build; installed via Homebrew
-    ../../modules/pam-reattach
     ../../modules/poetry
     ../../modules/poppler
     ../../modules/pre-commit
     ../../modules/python3
-    ../../modules/raycast
     ../../modules/ripgrep
-    ../../modules/slack
     ../../modules/sops
-    ../../modules/spotify
     ../../modules/stylix
     ../../modules/swaks
-    ../../modules/tenv
-    ../../modules/terminal-notifier
-    ../../modules/terraform-docs
-    ../../modules/tfupdate
-    ../../modules/tflint
-    ../../modules/thunderbird
-    ../../modules/telegram-desktop
     ../../modules/tmux
     ../../modules/tree
     ../../modules/trivy
-    ../../modules/utm
     ../../modules/uv
-    ../../modules/vscode
     ../../modules/watch
     ../../modules/yamllint
     ../../modules/yq
@@ -83,9 +59,8 @@
   ];
 
   home = {
-    username = "stefanovezzalini";
-    homeDirectory = "/Users/stefanovezzalini";
-    stateVersion = "25.05";
+    # username and homeDirectory come from the host's users.users.<name>;
+    # stateVersion is set per platform (home/darwin, home/linux)
     sessionPath = [ "$HOME/.local/bin" ];
   };
 
