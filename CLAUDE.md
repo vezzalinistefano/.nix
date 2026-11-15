@@ -1,6 +1,6 @@
 # Nix-Darwin Personal Configuration
 
-**ABOUTME:** Comprehensive nix-darwin configuration for macOS with home-manager integration, nixvim, and development environments.
+**ABOUTME:** Comprehensive nix-darwin configuration for macOS (plus one NixOS laptop) with home-manager integration, nixvim, and development environments.
 
 This is Stefano Vezzalini's personal nix-darwin configuration managing macOS system settings, user environments, and development tools through Nix flakes.
 
@@ -16,9 +16,13 @@ This is Stefano Vezzalini's personal nix-darwin configuration managing macOS sys
 ### Directory Structure
 ```
 ├── flake.nix                    # Main flake configuration
-├── hosts/common/                # System configuration shared by all hosts
+├── hosts/common/                # System configuration shared by the Macs
 ├── hosts/<HOSTNAME>/            # Per-host overrides (hostName); one dir per machine
+├── hosts/callisto/              # NixOS laptop: whole system config, disk layout, hardware scan
 ├── home/common/                 # User home-manager configuration shared by all hosts
+├── home/darwin/                 # macOS-only user configuration
+├── home/work/                   # Work tooling (cloud, Kubernetes, Terraform, Slack); Macs only
+├── home/linux/                  # Linux desktop user configuration (Hyprland)
 ├── docs/wiki/                   # Wiki pages (e.g. new-host setup guide)
 ├── modules/                     # Reusable configuration modules
 │   ├── nixvim/                  # Neovim configuration
@@ -41,6 +45,7 @@ This is Stefano Vezzalini's personal nix-darwin configuration managing macOS sys
 - `home-manager`: User environment management
 - `nixvim`: Neovim configuration framework
 - `stylix`: System theming
+- `disko`, `nixos-hardware`: disk layout and ThinkPad quirks for the NixOS host
 
 ### System Configuration (`hosts/common/default.nix`)
 - Hosts: SWS000154, SWS000135 (built via `mkDarwinHost` in `flake.nix`)
@@ -170,7 +175,14 @@ GUI apps with a nixpkgs package and a Homebrew cask (spotify, brave, dbeaver, ra
 ```nix
 apps.spotify.source = "nix";   # or "homebrew"
 ```
-Defaults live in each `app.nix` (spotify is "homebrew", the rest "nix"). To add an app: copy an existing folder and import its `darwin.nix` in `hosts/common/default.nix` and its `default.nix` in `home/common/default.nix`.
+Defaults live in each `app.nix` (spotify is "homebrew", the rest "nix"). To add an app: copy an existing folder and import its `darwin.nix` in `hosts/common/default.nix` and its `default.nix` in `home/darwin/default.nix`.
+
+## NixOS host (callisto)
+callisto is a ThinkPad T480 (`x86_64-linux`, user `sv`) with Hyprland, built by `mkNixosHost` in `flake.nix` from `hosts/callisto` plus `home/common` and `home/linux` (no work tooling). The Macs cannot build Linux packages, so they only evaluate: install with nixos-anywhere, update with `nrs callisto` (remote `nixos-rebuild`, callisto builds itself). See `docs/wiki/nixos-host-setup.md`. Check it evaluates with:
+```bash
+nix eval --raw .#nixosConfigurations.callisto.config.system.build.toplevel.drvPath
+```
+Modules imported by `home/common` must work on both macOS and Linux; put platform-specific ones in `home/darwin` or `home/linux`.
 
 ## Adding a Host
 See `docs/wiki/new-host-setup.md` (and `docs/wiki/managing-apps.md` for installing and updating apps). In short: create `hosts/<HOSTNAME>/default.nix` (imports `../common`, sets `networking.hostName`) and add `"<HOSTNAME>" = mkDarwinHost { hostname = "<HOSTNAME>"; };` to `flake.nix`.

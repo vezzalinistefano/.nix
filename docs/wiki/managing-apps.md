@@ -30,7 +30,7 @@ All three come from `modules/lib/mk-switchable-app.nix`. Override per host in `h
 apps.spotify.source = "nix";   # or "homebrew"
 ```
 
-To add one: copy an existing folder, edit `app.nix`, import `darwin.nix` in `hosts/common/default.nix` and `default.nix` in `home/common/default.nix`, `git add` the folder, then `drb`.
+To add one: copy an existing folder, edit `app.nix`, import `darwin.nix` in `hosts/common/default.nix` and `default.nix` in `home/darwin/default.nix`, `git add` the folder, then `drb`.
 
 ## 3. Casks from a third-party tap
 

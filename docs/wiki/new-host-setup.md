@@ -3,7 +3,7 @@
 This guide takes a fresh Apple Silicon Mac from nothing to a fully applied copy of this flake.
 It covers Nix as a package manager, nix-darwin (system), home-manager (user), Homebrew (casks and brews declared in nix) and the per-host wiring in the repo.
 
-> **Scope:** `aarch64-darwin` only. Hosts are named after the machine hostname (for example `SWS000154`, `SWS000135`).
+> **Scope:** `aarch64-darwin` only; the NixOS laptop has its own page, [nixos-host-setup.md](nixos-host-setup.md). Hosts are named after the machine hostname (for example `SWS000154`, `SWS000135`).
 > Verify the commands against the current upstream docs if something fails, since installers change.
 
 ## 0. Overview
@@ -12,14 +12,14 @@ It covers Nix as a package manager, nix-darwin (system), home-manager (user), Ho
 | --- | --- | --- |
 | Package manager and daemon | Nix (official installer) | not in the repo, installed once by hand |
 | macOS system settings | nix-darwin | `hosts/common/`, `hosts/<HOSTNAME>/` |
-| User packages and dotfiles | home-manager (as a nix-darwin module) | `home/common/`, `modules/*` |
+| User packages and dotfiles | home-manager (as a nix-darwin module) | `home/common/`, `home/darwin/`, `home/work/`, `modules/*` |
 | GUI apps and brews not in nixpkgs | Homebrew, managed by nix-darwin | `hosts/common/homebrew.nix` |
 
-`flake.nix` builds every host through `mkDarwinHost`. All hosts share `hosts/common` and `home/common`, and `hosts/<HOSTNAME>/default.nix` only holds machine-specific overrides (today just `networking.hostName`).
+`flake.nix` builds every Mac through `mkDarwinHost`. They all share `hosts/common` and the user configuration (`home/common` for every host, `home/darwin` for macOS, `home/work` for the work tooling), and `hosts/<HOSTNAME>/default.nix` only holds machine-specific overrides (today just `networking.hostName`).
 
 ## 1. Prerequisites on the new Mac
 
-1. Finish macOS setup and sign in to your user. The username must match the one in the flake (`stefanovezzalini`), because `home/common` and `hosts/common` hardcode `/Users/stefanovezzalini`. Otherwise see [Different username](#different-username).
+1. Finish macOS setup and sign in to your user. The username must match the one in the flake (`stefanovezzalini`), because `hosts/common` hardcodes `/Users/stefanovezzalini`. Otherwise see [Different username](#different-username).
 2. Set the hostname. It decides which flake output `darwin-rebuild` picks:
    ```bash
    sudo scutil --set HostName   SWS000135
@@ -104,11 +104,11 @@ Skip this section when the host already exists in `flake.nix`. It is needed once
    ```bash
    git add hosts/<HOSTNAME> flake.nix
    ```
-4. Machine-specific settings that differ per host (extra packages, a different `homebrew.nix`, extra imports) go in `hosts/<HOSTNAME>/default.nix`. Anything shared goes in `hosts/common` or `home/common`.
+4. Machine-specific settings that differ per host (extra packages, a different `homebrew.nix`, extra imports) go in `hosts/<HOSTNAME>/default.nix`. Anything shared goes in `hosts/common` or `home/common` (macOS-only user modules in `home/darwin`, work tooling in `home/work`).
 
 ### Different username
 
-`users.users.stefanovezzalini`, `system.primaryUser`, `GOPATH` and `home.homeDirectory` are hardcoded for `stefanovezzalini`. A different username means parameterising those in `hosts/common/default.nix`, `home/common/default.nix` and `mkDarwinHost`, which is not done today.
+`users.users.stefanovezzalini`, `system.primaryUser` and `GOPATH` are hardcoded for `stefanovezzalini` in `hosts/common/default.nix` (home-manager takes the username and home directory from there). A different username means parameterising those and passing it through `mkDarwinHost`, which is not done today.
 
 ## 6. First build and activation
 
@@ -175,7 +175,7 @@ If the system and `home-manager` activation succeeded, `nixvim`, `tmux`, `ghostt
 
 ```bash
 cd ~/.nix
-$EDITOR modules/<tool>/default.nix   # edit, or add a module and import it in home/common/default.nix
+$EDITOR modules/<tool>/default.nix   # edit, or add a module and import it in home/common (or home/darwin, home/work)
 git add -A                           # new files must be tracked for flakes
 drb                                  # build only, catches errors
 drs                                  # switch
