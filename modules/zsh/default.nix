@@ -61,6 +61,10 @@ let
     dru = "nix flake update --flake /private/etc/nix-darwin && sudo darwin-rebuild switch --flake /private/etc/nix-darwin";
     # nix-darwin: format nix files
     drf = "nixfmt /private/etc/nix-darwin";
+    # NixOS hosts, deployed from this Mac: build on the host itself and switch (asks for its sudo password)
+    nrs = "nixos-deploy switch";
+    # NixOS hosts: build and activate without making it the boot default (a reboot undoes it)
+    nrt = "nixos-deploy test";
 
     git-list-untracked = "git fetch --prune && git branch -r | awk \"{print \$1}\" | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk \"{print \$1}\"";
     git-remove-untracked = "git fetch --prune && git branch -r | awk \"{print \$1}\" | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk \"{print \$1}\" | xargs git branch -d";
@@ -95,7 +99,17 @@ in
     autosuggestion = {
       enable = true;
     };
-    completionInit = "autoload -Uz compinit && compinit";
+    # compinit's security scan and cache rebuild are the slow part of shell startup:
+    # do them at most once a day and load the cached dump otherwise.
+    # After adding a tool, its completions can take up to a day to show (or run `compinit`).
+    completionInit = ''
+      autoload -Uz compinit
+      () {
+        local dump=''${ZDOTDIR:-$HOME}/.zcompdump
+        local -a stale=($dump(N.mh+24))
+        if [[ ! -e $dump || -n $stale ]]; then compinit; else compinit -C; fi
+      }
+    '';
     syntaxHighlighting.enable = true;
     sessionVariables = {
       MANPAGER = "nvim +Man!";
@@ -117,6 +131,18 @@ in
                   git worktree remove "$wt" --force
                 fi
               done
+          }
+
+          # nrs <host> / nrt <host>: push this flake's NixOS config to a host over SSH.
+          # Runs on the Mac (nixos-rebuild comes from home/darwin); the host builds its own closure.
+          # The SSH destination defaults to sv@<host>.local, pass another as the second argument.
+          nixos-deploy() {
+            local action=$1 host=''${2:?usage: nrs|nrt <host> [ssh-destination]}
+            local dest=''${3:-sv@$host.local}
+            nixos-rebuild "$action" --no-reexec \
+              --flake "/private/etc/nix-darwin#$host" \
+              --target-host "$dest" --build-host "$dest" \
+              --sudo --ask-sudo-password
           }
 
           git-cleanup-orphaned() {
@@ -178,8 +204,6 @@ in
 
           bindkey '^[[A' history-search-backward
           bindkey '^[[B' history-search-forward
-
-          source <(kubectl completion zsh)
         '';
       in
       lib.mkMerge [ zshConfig ];
