@@ -3,6 +3,7 @@ _: {
   imports = [
     ../../modules/argocd
     ../../modules/fleetctl
+    ../../modules/git/work.nix
     ../../modules/glab
     ../../modules/google-cloud-sdk
     ../../modules/k9s

@@ -112,23 +112,20 @@ gpg --export --armor KEYID            # prints it; paste it where needed
 
 ### Sign git commits
 
+This repo already sets it up, so every commit and tag is signed:
+
+- `modules/git/default.nix` holds the personal identity and key (used on callisto).
+- `modules/git/work.nix` (work Macs) makes the work identity and key the default, and switches back to the personal one inside `~/Projects/personal/` and `~/.nix/`.
+
+To change a key, replace its fingerprint in those two files. Without Nix the same thing is:
+
 ```bash
 git config --global user.signingkey KEYID
 git config --global commit.gpgsign true
 git config --global tag.gpgsign true
 ```
 
-In this repo that belongs in `modules/git/default.nix` instead, so every machine gets it:
-
-```nix
-programs.git.settings = {
-  user.signingkey = "KEYID";
-  commit.gpgsign = true;
-  tag.gpgsign = true;
-};
-```
-
-Check a commit: `git log --show-signature -1`.
+Check which key a folder uses with `git config user.signingkey`, and a commit with `git log --show-signature -1`.
 
 ### Encrypt and decrypt files
 
@@ -158,24 +155,19 @@ gpg --encrypt --recipient their@email file.txt
 
 ### Secrets in a repo with sops
 
-`sops` is installed. It can encrypt a YAML or JSON file to your PGP key, so secrets can live in git:
-
-```yaml
-# .sops.yaml in the repo root
-creation_rules:
-  - pgp: "YOUR40CHARACTERFINGERPRINT"
-```
+`sops` is installed. It encrypts a YAML or JSON file so secrets can live in git. `.sops.yaml` in the repo root lists who can decrypt: both GPG keys (to edit by hand) and one age key per machine. Files under `secrets/` follow that rule.
 
 ```bash
-sops secrets.yaml        # opens the decrypted file in $EDITOR, re-encrypts on save
-sops -d secrets.yaml     # print decrypted
+sops secrets/example.yaml          # opens the decrypted file in $EDITOR, re-encrypts on save
+sops -d secrets/example.yaml       # print decrypted
+sops updatekeys secrets/example.yaml   # after adding or removing a key in .sops.yaml
 ```
 
 ## 6. The agent and the passphrase window
 
 `gpg-agent` remembers the unlocked key so you are not asked on every commit.
 
-- On callisto it is configured in `modules/gpg-agent`: the passphrase is asked again after 1 hour without use, and after 8 hours at the latest.
+- On callisto it is configured in `modules/gpg-agent`, on the Macs in `modules/pinentry-mac` (a window that can save the passphrase in the Keychain). The passphrase is asked again after 1 hour without use, and after 8 hours at the latest.
 - Forget the cached passphrase now: `gpgconf --reload gpg-agent`.
 - Restart everything: `gpgconf --kill all` (it starts again by itself on the next `gpg` call).
 - In a terminal with no desktop (SSH session), run `export GPG_TTY=$(tty)` first so it can ask in the terminal.

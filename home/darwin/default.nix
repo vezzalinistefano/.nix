@@ -7,6 +7,7 @@
     ../../modules/gemini-cli
     ../../modules/linearmouse
     ../../modules/pam-reattach
+    ../../modules/pinentry-mac
     ../../modules/raycast
     ../../modules/spotify
     ../../modules/telegram-desktop
