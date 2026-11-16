@@ -9,6 +9,14 @@ keys:
   # callisto: derived from its SSH host key (ssh-keyscan callisto.local | ssh-to-age)
   - &age_callisto age1x23l0kddsvyfz2rrnkjk8pg0ue6nuwreyyjtt0awy4c2d8cymuwqd0t038
 creation_rules:
+  # callisto is a personal machine: the work GPG key cannot read its secrets
+  - path_regex: secrets/callisto\.yaml$
+    key_groups:
+      - pgp:
+          - *pgp_personal
+        age:
+          - *age_SWS000135
+          - *age_callisto
   - path_regex: secrets/.*\.yaml$
     key_groups:
       - pgp:
@@ -16,4 +24,3 @@ creation_rules:
           - *pgp_work
         age:
           - *age_SWS000135
-          - *age_callisto

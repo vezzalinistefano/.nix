@@ -73,7 +73,23 @@ Afterwards:
 
 ## 2. Update (day to day)
 
-On the Mac, after editing the flake:
+### Automatically
+
+callisto follows the `main` branch of this repository on GitHub (`system.autoUpgrade` in `hosts/callisto/default.nix`). Once a day, or at the next boot if it was off, it builds what was pushed and switches to it. So: edit on the Mac, commit, push to `main`, done.
+
+```bash
+sudo systemctl start nixos-upgrade     # on callisto: do it now instead of waiting
+journalctl -u nixos-upgrade -e         # what the last run did
+systemctl list-timers nixos-upgrade    # when the next run is
+```
+
+- Package versions come from the committed `flake.lock`: nothing is updated unless you pushed it.
+- If the build fails, callisto stays on its current system.
+- A new kernel is used from the next reboot; it never reboots by itself.
+
+### By hand, from the Mac
+
+To apply a change right away or before pushing it, after editing the flake:
 
 ```bash
 nrs callisto          # build on callisto and switch

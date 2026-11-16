@@ -128,6 +128,19 @@
   };
 
   hardware.bluetooth.enable = true;
+  # Follows the `main` branch on GitHub: once a day (or at the next boot if it was off) it
+  # builds what was pushed and switches to it. Versions come from the committed flake.lock,
+  # so nothing changes unless it was pushed. Run it now: `sudo systemctl start nixos-upgrade`
+  system.autoUpgrade = {
+    enable = true;
+    flake = "github:vezzalinistefano/.nix#${config.networking.hostName}";
+    dates = "daily";
+    persistent = true;
+    randomizedDelaySec = "10min";
+    operation = "switch";
+    allowReboot = false;
+  };
+
   # Firmware updates: `fwupdmgr refresh && fwupdmgr update`
   services.fwupd.enable = true;
 

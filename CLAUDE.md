@@ -178,7 +178,7 @@ apps.spotify.source = "nix";   # or "homebrew"
 Defaults live in each `app.nix` (spotify is "homebrew", the rest "nix"). To add an app: copy an existing folder and import its `darwin.nix` in `hosts/common/default.nix` and its `default.nix` in `home/darwin/default.nix`.
 
 ## NixOS host (callisto)
-callisto is a ThinkPad T480 (`x86_64-linux`, user `sv`) with Hyprland, built by `mkNixosHost` in `flake.nix` from `hosts/callisto` plus `home/common` and `home/linux` (no work tooling). The Macs cannot build Linux packages, so they only evaluate: install with nixos-anywhere, update with `nrs callisto` (remote `nixos-rebuild`, callisto builds itself). See `docs/wiki/nixos-host-setup.md`. Check it evaluates with:
+callisto is a ThinkPad T480 (`x86_64-linux`, user `sv`) with Hyprland, built by `mkNixosHost` in `flake.nix` from `hosts/callisto` plus `home/common` and `home/linux` (no work tooling). The Macs cannot build Linux packages, so they only evaluate: install with nixos-anywhere; callisto then updates itself daily from the `main` branch on GitHub (`system.autoUpgrade`), or right away with `nrs callisto` (remote `nixos-rebuild`, callisto builds itself). It is a personal machine: personal git identity and GPG key, and its secrets (`secrets/callisto.yaml`, sops) are not readable by the work key. See `docs/wiki/nixos-host-setup.md`. Check it evaluates with:
 ```bash
 nix eval --raw .#nixosConfigurations.callisto.config.system.build.toplevel.drvPath
 ```
