@@ -14,7 +14,8 @@ _: {
     };
   };
 
-  # Lock after 5 minutes, screen off after 6, suspend after 15; always lock before sleep
+  # Lock after 5 minutes, screen off after 6, suspend after 15 on battery only (plugged in
+  # it stays reachable over SSH); always lock before sleep
   services.hypridle = {
     enable = true;
     settings = {
@@ -35,7 +36,7 @@ _: {
         }
         {
           timeout = 900;
-          on-timeout = "systemctl suspend";
+          on-timeout = "systemd-ac-power || systemctl suspend";
         }
       ];
     };
