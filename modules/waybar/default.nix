@@ -25,7 +25,7 @@ _: {
         format = "{:%a %d %b  %H:%M}";
         tooltip = false;
       };
-      # Current song from any player that speaks MPRIS (Spotifast does); click to play/pause
+      # Current song from any player that speaks MPRIS; click to play/pause
       mpris = {
         format = "{status_icon} {artist} - {title}";
         format-stopped = "";
@@ -36,7 +36,7 @@ _: {
         max-length = 50;
         tooltip-format = "{player}: {album}";
       };
-      # Needed by Spotifast to keep playing after its window is closed
+      # Icons of apps that keep running after their window is closed
       tray = {
         icon-size = 14;
         spacing = 8;

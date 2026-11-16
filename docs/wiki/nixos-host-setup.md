@@ -125,6 +125,5 @@ Super is the modifier (`modules/hyprland/hyprland.lua`).
 - **Firmware**: `fwupdmgr refresh && fwupdmgr update`.
 - **SSH key for GitHub**, **age/sops keys**: as in [new-host-setup.md](new-host-setup.md), section 7.
 - **GPG**: see [gpg-vademecum.md](gpg-vademecum.md).
-- **Spotifast**: register your own app at developer.spotify.com/dashboard with the redirect URI `http://127.0.0.1:8989/login` and the Web API ticked, then paste its Client ID into Spotifast's sign-in screen. The first sign-in makes the keyring ask for a password: leave it empty so it unlocks by itself at login (the disk is already encrypted).
 - **LibreWolf**: Vimium is installed by policy; allow it in private windows from the add-ons page if you want it there.
 - **herdr plugins**: installed by hand, see `modules/herdr/default.nix`.

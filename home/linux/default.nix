@@ -11,7 +11,6 @@
     ../../modules/hyprlock
     ../../modules/librewolf
     ../../modules/mako
-    ../../modules/spotifast
     ../../modules/vicinae
     ../../modules/vscodium
     ../../modules/waybar
