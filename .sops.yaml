@@ -6,6 +6,8 @@ keys:
   - &pgp_work 0A1E5F19CCE8DE9357D894CB19421C9B54298D5F
   # Machines: age keys (~/.config/sops/age/keys.txt)
   - &age_SWS000135 age1r209luhl6q7rrjn6ucg0yflm2de6j48q75nkr5kyw93z8u2kaqssxhezyz
+  # callisto: derived from its SSH host key (ssh-keyscan callisto.local | ssh-to-age)
+  - &age_callisto age1x23l0kddsvyfz2rrnkjk8pg0ue6nuwreyyjtt0awy4c2d8cymuwqd0t038
 creation_rules:
   - path_regex: secrets/.*\.yaml$
     key_groups:
@@ -14,3 +16,4 @@ creation_rules:
           - *pgp_work
         age:
           - *age_SWS000135
+          - *age_callisto

@@ -11,11 +11,21 @@
   imports = [
     inputs.disko.nixosModules.disko
     inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t480
+    inputs.sops-nix.nixosModules.sops
     ./disko.nix
     ./hardware-configuration.nix
   ];
 
   networking.hostName = "callisto";
+
+  # Secrets live encrypted in secrets/callisto.yaml (who can read them: .sops.yaml).
+  # callisto decrypts them with its SSH host key when the system is activated.
+  sops = {
+    defaultSopsFile = ../../secrets/callisto.yaml;
+    age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+    gnupg.sshKeyPaths = [ ];
+    secrets."${username}-password".neededForUsers = true;
+  };
   networking.networkmanager.enable = true;
 
   boot.loader.systemd-boot.enable = true;
@@ -53,8 +63,9 @@
       "video"
     ];
     shell = pkgs.zsh;
-    # Only used when the account is first created: run `passwd` after the first login
-    initialPassword = "changeme";
+    # Password given to the account when it is first created (a reinstall); afterwards
+    # `passwd` changes it. Set the stored one with scripts/set-user-password.sh
+    hashedPasswordFile = config.sops.secrets."${username}-password".path;
     # Machines allowed to log in and deploy (one entry per client device)
     openssh.authorizedKeys.keys = [
       # SWS000135

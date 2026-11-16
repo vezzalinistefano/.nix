@@ -65,10 +65,9 @@ Then run the same command from the Mac without `SSHPASS` and `--env-password`, w
 Afterwards:
 
 1. Type the disk passphrase at boot. Hyprland starts as `sv` without a second login.
-2. Open a terminal (Super+Return) and change the initial password `changeme`:
-   ```bash
-   passwd
-   ```
+2. The password of `sv` (for `sudo` and the lock screen) is the one stored, encrypted, in `secrets/callisto.yaml`. Set it on the Mac **before** installing with `scripts/set-user-password.sh callisto sv` and commit the file. It is only applied when the account is created; later, change it on callisto with `passwd`.
+
+   A reinstall gives callisto a new SSH host key, which is also the key it decrypts secrets with. Before reinstalling, pass the old host key to nixos-anywhere with `--extra-files`, or after it update the `age_callisto` line in `.sops.yaml` (`ssh-keyscan callisto.local | ssh-to-age`), run `sops updatekeys secrets/callisto.yaml` and deploy again.
 3. On the Mac, commit the generated `hosts/callisto/hardware-configuration.nix`.
 4. The SSH host key changed with the install. If SSH complains: `ssh-keygen -R <IP>`.
 

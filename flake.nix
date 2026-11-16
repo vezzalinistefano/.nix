@@ -40,6 +40,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Decrypts the secrets kept in ./secrets when a NixOS host is activated
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Hardware quirks per laptop model (callisto is a ThinkPad T480)
     nixos-hardware = {
       url = "github:NixOS/nixos-hardware";
