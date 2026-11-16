@@ -48,7 +48,7 @@ This is Stefano Vezzalini's personal nix-darwin configuration managing macOS sys
 - `disko`, `nixos-hardware`: disk layout and ThinkPad quirks for the NixOS host
 
 ### System Configuration (`hosts/common/default.nix`)
-- Hosts: SWS000154, SWS000135 (built via `mkDarwinHost` in `flake.nix`)
+- Host: SWS000135 (built via `mkDarwinHost` in `flake.nix`; add more the same way)
 - TouchID sudo authentication
 - Automatic garbage collection and store optimization
 - Yabai window manager

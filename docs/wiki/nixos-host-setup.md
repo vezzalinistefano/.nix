@@ -108,7 +108,7 @@ nixos-rebuild switch --no-reexec \
 - They ask for the sudo password of `sv` on callisto.
 - `callisto.local` is announced by avahi. If it does not resolve, pass the destination: `nrs callisto sv@<IP>`.
 - New files must be `git add`ed first, as for the Macs.
-- Only machines whose public key is listed in `users.users.sv.openssh.authorizedKeys.keys` (`hosts/callisto/default.nix`) can log in. Add the other Mac's `~/.ssh/id_ed25519.pub` there to deploy from it.
+- Only machines whose public key is listed in `users.users.sv.openssh.authorizedKeys.keys` (`hosts/callisto/default.nix`) can log in. Add another machine's `~/.ssh/id_ed25519.pub` there to deploy from it.
 
 Rollback: pick an older generation in the boot menu, or on callisto `sudo nixos-rebuild switch --rollback`.
 

@@ -127,7 +127,6 @@
     in
     {
       darwinConfigurations = {
-        "SWS000154" = mkDarwinHost { hostname = "SWS000154"; };
         "SWS000135" = mkDarwinHost { hostname = "SWS000135"; };
       };
 

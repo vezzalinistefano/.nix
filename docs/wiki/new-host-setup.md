@@ -3,7 +3,7 @@
 This guide takes a fresh Apple Silicon Mac from nothing to a fully applied copy of this flake.
 It covers Nix as a package manager, nix-darwin (system), home-manager (user), Homebrew (casks and brews declared in nix) and the per-host wiring in the repo.
 
-> **Scope:** `aarch64-darwin` only; the NixOS laptop has its own page, [nixos-host-setup.md](nixos-host-setup.md). Hosts are named after the machine hostname (for example `SWS000154`, `SWS000135`).
+> **Scope:** `aarch64-darwin` only; the NixOS laptop has its own page, [nixos-host-setup.md](nixos-host-setup.md). Hosts are named after the machine hostname (for example `SWS000135`).
 > Verify the commands against the current upstream docs if something fails, since installers change.
 
 ## 0. Overview
