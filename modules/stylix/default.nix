@@ -45,4 +45,6 @@
   stylix.targets.qt.enable = false;
   stylix.targets.kde.enable = false;
   stylix.targets.gnome.enable = false;
+  # rofi is not used (vicinae is the launcher); its stylix module also sets a renamed option
+  stylix.targets.rofi.enable = false;
 }
