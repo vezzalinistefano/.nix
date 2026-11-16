@@ -5,6 +5,7 @@
   imports = [
     ../../modules/claude-code
     ../../modules/direnv
+    ../../modules/feather
     ../../modules/gpg-agent
     ../../modules/hyprland
     ../../modules/hyprpolkitagent
