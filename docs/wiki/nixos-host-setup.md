@@ -87,6 +87,16 @@ systemctl list-timers nixos-upgrade    # when the next run is
 - If the build fails, callisto stays on its current system.
 - A new kernel is used from the next reboot; it never reboots by itself.
 
+### By hand, on callisto
+
+With the repository cloned to `~/.nix` on callisto (and its SSH key added to GitHub to push):
+
+```bash
+nrs        # sudo nixos-rebuild switch --flake ~/.nix
+nrt        # the same, but a reboot goes back to the previous system
+nrb        # build only, to check a change
+```
+
 ### By hand, from the Mac
 
 To apply a change right away or before pushing it, after editing the flake:

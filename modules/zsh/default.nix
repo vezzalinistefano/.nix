@@ -1,6 +1,36 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
 let
-  myAliases = {
+  # Rebuild shortcuts differ per system: the Macs rebuild themselves with darwin-rebuild and
+  # deploy NixOS hosts over SSH; a NixOS host rebuilds itself from its own clone in ~/.nix
+  rebuildAliases =
+    if pkgs.stdenv.isDarwin then
+      {
+        # nix-darwin: rebuild and switch
+        drs = "sudo darwin-rebuild switch --flake /private/etc/nix-darwin";
+        # nix-darwin: build without switching (test first)
+        drb = "darwin-rebuild build --flake /private/etc/nix-darwin";
+        # nix-darwin: check flake syntax
+        drc = "nix flake check /private/etc/nix-darwin";
+        # nix-darwin: update packages and rebuild
+        dru = "nix flake update --flake /private/etc/nix-darwin && sudo darwin-rebuild switch --flake /private/etc/nix-darwin";
+        # nix-darwin: format nix files
+        drf = "nixfmt /private/etc/nix-darwin";
+        # NixOS hosts, deployed from this Mac: build on the host itself and switch (asks for its sudo password)
+        nrs = "nixos-deploy switch";
+        # NixOS hosts: build and activate without making it the boot default (a reboot undoes it)
+        nrt = "nixos-deploy test";
+      }
+    else
+      {
+        # NixOS: rebuild this machine from ~/.nix and switch
+        nrs = "sudo nixos-rebuild switch --flake ~/.nix";
+        # NixOS: build and activate without making it the boot default (a reboot undoes it)
+        nrt = "sudo nixos-rebuild test --flake ~/.nix";
+        # NixOS: build only, to check a change
+        nrb = "nixos-rebuild build --flake ~/.nix";
+      };
+
+  myAliases = rebuildAliases // {
     # git: basics
     gadd = "git add -v";
     gaddi = "git add --interactive";
@@ -51,20 +81,6 @@ let
     rm = "rm -Iv";
     # safer mv
     mv = "mv -v";
-    # nix-darwin: rebuild and switch
-    drs = "sudo darwin-rebuild switch --flake /private/etc/nix-darwin";
-    # nix-darwin: build without switching (test first)
-    drb = "darwin-rebuild build --flake /private/etc/nix-darwin";
-    # nix-darwin: check flake syntax
-    drc = "nix flake check /private/etc/nix-darwin";
-    # nix-darwin: update packages and rebuild
-    dru = "nix flake update --flake /private/etc/nix-darwin && sudo darwin-rebuild switch --flake /private/etc/nix-darwin";
-    # nix-darwin: format nix files
-    drf = "nixfmt /private/etc/nix-darwin";
-    # NixOS hosts, deployed from this Mac: build on the host itself and switch (asks for its sudo password)
-    nrs = "nixos-deploy switch";
-    # NixOS hosts: build and activate without making it the boot default (a reboot undoes it)
-    nrt = "nixos-deploy test";
 
     git-list-untracked = "git fetch --prune && git branch -r | awk \"{print \$1}\" | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk \"{print \$1}\"";
     git-remove-untracked = "git fetch --prune && git branch -r | awk \"{print \$1}\" | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk \"{print \$1}\" | xargs git branch -d";
