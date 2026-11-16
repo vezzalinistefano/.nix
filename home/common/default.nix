@@ -13,6 +13,7 @@
     ../../modules/alacritty
     ../../modules/ansible
     ../../modules/ast-grep
+    ../../modules/bitwarden-cli
     ../../modules/bun
     # ../../modules/checkov  # Disabled: causes OOM during build (pulls in heavy data science deps)
     # ../../modules/claude-code
