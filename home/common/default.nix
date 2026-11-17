@@ -22,6 +22,7 @@
     ../../modules/fira-code-nerd-font
     ../../modules/fzf
     ../../modules/ghostty
+    ../../modules/ghq
     ../../modules/git
     ../../modules/go
     ../../modules/golangci-lint
@@ -53,6 +54,7 @@
     ../../modules/watch
     ../../modules/yamllint
     ../../modules/yq
+    ../../modules/zoxide
     ../../modules/zsh
   ];
 

@@ -115,6 +115,7 @@ let
       # Fuzzy finding
       cdf = "cd $(find . -type d 2> /dev/null | fzf)"; # fuzzy find from current directory
       cdw = "cd $(git worktree list | awk '{ print $1 }' | fzf)"; # fuzzy find across git worktrees
+      cdg = "cd $(ghq list -p | fzf)"; # fuzzy find across all ghq-managed repos
     };
 in
 {
