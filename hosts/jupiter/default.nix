@@ -73,11 +73,9 @@
       "networkmanager"
     ];
     shell = pkgs.zsh;
-    # No password: the SSH key is the only way in, and sudo cannot ask for a
-    # password that does not exist (security.sudo.wheelNeedsPassword below), so
-    # `nrs jupiter` only needs an empty answer at its password prompt. Set one
-    # later with `passwd` if you want a second factor for sudo, then turn that
-    # option off.
+    # `passwd` on the machine: the hash stays in /etc/shadow, never in the repo
+    # (jupiter has no sops yet, so there is nowhere to put a hashedPasswordFile).
+    # SSH stays key-only; the password is only for sudo and the physical console.
     # Machines allowed to log in and deploy (one entry per client device)
     openssh.authorizedKeys.keys = [
       # SWS000135
@@ -88,7 +86,10 @@
   };
   programs.zsh.enable = true;
 
-  security.sudo.wheelNeedsPassword = false;
+  # sudo asks for the password of `sv` (set with `passwd`, kept in /etc/shadow).
+  # It is the same password that a reboot-free deploy needs, so a stolen session
+  # or a compromised script cannot become root on its own.
+  security.sudo.wheelNeedsPassword = true;
 
   # Key-only SSH, limited to the one user; this is how the Macs deploy
   services.openssh = {

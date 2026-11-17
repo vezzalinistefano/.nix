@@ -19,7 +19,7 @@ drb            # build only
 nrs callisto
 nrt callisto   # activate without making it the boot default
 
-# jupiter (headless server): same commands; press Enter at the sudo prompt
+# jupiter (headless server): same commands, with the sudo password of sv
 nrs jupiter
 
 # callisto updates itself daily from the `release` branch

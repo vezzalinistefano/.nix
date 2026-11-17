@@ -125,10 +125,11 @@ ssh sv@jupiter.local      # or ssh sv@<lease-IP>
 
 - The SSH host key changed with the install: `ssh-keygen -R <lease-IP>` and
   `ssh-keygen -R jupiter.local` if ssh complains.
-- `sv` has **no password**: the SSH key is the only way in, and sudo does not ask
-  for one (`security.sudo.wheelNeedsPassword = false`), so at the `nrs jupiter`
-  password prompt just press Enter. To want a password for sudo, set one with
-  `passwd` and remove that line from `hosts/jupiter/default.nix`.
+- sudo asks for the password of `sv`: set it once on the machine with `passwd`
+  (it lands in `/etc/shadow`, which is mutable, so it survives deployments and
+  never enters the repo). SSH is key-only, so that password is only used by
+  `sudo` and by the physical console. `nrs jupiter` prompts for it.
+- To rotate it: `ssh -t sv@jupiter.local passwd`.
 - Allowed keys today: `SWS000135` and `callisto`. Add another machine's
   `~/.ssh/id_ed25519.pub` to `users.users.sv.openssh.authorizedKeys.keys` in
   `hosts/jupiter/default.nix` and deploy.

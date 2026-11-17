@@ -100,9 +100,10 @@ callisto non cambia (default `desktop = true`).
 ## Accesso e sicurezza
 
 - SSH **key-only**: `SWS000135` e `callisto`
-- `sv` **senza password** → `security.sudo.wheelNeedsPassword = false`
-- Al prompt di `nrs jupiter` basta premere Invio
-- Per una password: `passwd` sul server e togli l'opzione
+- **sudo chiede la password** di `sv` (`wheelNeedsPassword = true`)
+- La password vive in `/etc/shadow` (`passwd`), **mai nel repo**
+- SSH resta key-only: la password serve a sudo e alla console fisica
+- `nrs jupiter` la chiede; rotazione: `ssh -t sv@jupiter.local passwd`
 
 ---
 
@@ -175,7 +176,7 @@ nix fmt                                             ✅
 ## Decisioni
 
 - [x] **No LUKS** (reboot headless)
-- [x] **No password** per `sv` + sudo senza password
+- [x] **Password per sudo** (`passwd`, in `/etc/shadow`), SSH key-only
 - [x] **No sops** per ora
 - [x] Device **`/dev/nvme0n1`**, systemd-boot/UEFI
 - [x] Windows sul **SATA** preservato

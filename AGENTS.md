@@ -112,8 +112,10 @@ echo "use flake" > .envrc && direnv allow
 ## Styling and Theming
 
 ### Stylix Configuration (`modules/stylix/default.nix`)
-- Base16 Pop color scheme
-- Dark mode preference
+- Custom base16 schemes in `modules/stylix/schemes/`: SVAAA-Dark (default everywhere) and
+  SVAAA-Light (callisto, via the `light` specialisation). Every text pair the desktop uses
+  is WCAG AAA (7:1); `scripts/check-aaa-contrast.py` verifies it and `checks.contrast` gates CI
+- See `docs/wiki/theming.md` for the palettes, checks and the light/dark switch
 - Font stack:
   - Monospace: Hack Nerd Font
   - Sans-serif: IBM Plex Sans Arabic
@@ -187,7 +189,7 @@ callisto is a ThinkPad T480 (`x86_64-linux`, user `sv`) with Hyprland, built by 
 nix eval --raw .#nixosConfigurations.callisto.config.system.build.toplevel.drvPath
 ```
 
-jupiter is an x86_64 **physical** server (Giga-byte board, Ryzen 5 2600, 15 GiB RAM) that used to run Proxmox on its 1 TB NVMe (hostname `solaris`, static `192.168.1.35` with no internet). The install replaced Proxmox with NixOS on that NVMe; the Samsung SATA disk holding a Windows install is untouched. It is a headless home server, built by the same `mkNixosHost` with `desktop = false`: it gets `home/common` and `home/server` instead of `home/linux`. No desktop, no disk encryption (a reboot must need nothing typed on a keyboard), key-only SSH, `jupiter.local` through avahi and the same daily `release` auto-upgrade; `sv` has no password and `security.sudo.wheelNeedsPassword = false`, so `nrs jupiter` only asks for an empty answer at its password prompt. It has no sops secrets yet. See `docs/wiki/jupiter-setup.md`; check it evaluates with:
+jupiter is an x86_64 **physical** server (Giga-byte board, Ryzen 5 2600, 15 GiB RAM) that used to run Proxmox on its 1 TB NVMe (hostname `solaris`, static `192.168.1.35` with no internet). The install replaced Proxmox with NixOS on that NVMe; the Samsung SATA disk holding a Windows install is untouched. It is a headless home server, built by the same `mkNixosHost` with `desktop = false`: it gets `home/common` and `home/server` instead of `home/linux`. No desktop, no disk encryption (a reboot must need nothing typed on a keyboard), key-only SSH, `jupiter.local` through avahi and the same daily `release` auto-upgrade; SSH is key-only and sudo asks for the password of `sv` (set with `passwd`, stored in `/etc/shadow`, never in the repo). It has no sops secrets yet. See `docs/wiki/jupiter-setup.md`; check it evaluates with:
 ```bash
 nix eval --raw .#nixosConfigurations.jupiter.config.system.build.toplevel.drvPath
 ```
