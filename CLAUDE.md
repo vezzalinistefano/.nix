@@ -108,10 +108,10 @@ echo "use flake" > .envrc && direnv allow
 ## Styling and Theming
 
 ### Stylix Configuration (`modules/stylix/default.nix`)
-- Base16 Kanagawa Dragon color scheme
+- Base16 Pop color scheme
 - Dark mode preference
 - Font stack:
-  - Monospace: JetBrainsMono Nerd Font
+  - Monospace: Hack Nerd Font
   - Sans-serif: IBM Plex Sans Arabic
   - Serif: DejaVu Serif
 - Terminal opacity: 90%

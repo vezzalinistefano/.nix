@@ -11,6 +11,23 @@ _: {
         fade_on_empty = false;
         placeholder_text = "";
       };
+      # Clock and active keyboard layout: a password typed in the wrong layout fails silently
+      label = [
+        {
+          text = "$TIME";
+          font_size = 28;
+          position = "0, 80";
+          halign = "center";
+          valign = "center";
+        }
+        {
+          text = "$LAYOUT";
+          font_size = 11;
+          position = "0, -50";
+          halign = "center";
+          valign = "center";
+        }
+      ];
     };
   };
 

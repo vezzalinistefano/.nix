@@ -30,7 +30,8 @@
         };
     sizes = {
       terminal = 12;
-      applications = 9;
+      # 14" 1080p laptop screen at scale 1 needs a larger UI font than the Mac
+      applications = if pkgs.stdenv.hostPlatform.isDarwin then 9 else 11;
     };
   };
 
@@ -38,11 +39,12 @@
 
   stylix.targets.nixvim.enable = false;
   stylix.targets.obsidian.enable = false;
-  # GTK has no effect on macOS, and stylix's gtk4 theme clashes with home-manager's gtk.gtk4.theme.
-  # Kept off on Linux too for now: GTK apps there are untested with it.
-  stylix.targets.gtk.enable = false;
-  # Not using a Qt, KDE or GNOME desktop: skip the theme engines stylix would install on Linux
-  stylix.targets.qt.enable = false;
+  # GTK and Qt apps (volume control, file dialogs, passphrase and admin prompts) follow the
+  # theme on Linux. GTK has no effect on macOS, and stylix's gtk4 theme clashes there with
+  # home-manager's gtk.gtk4.theme.
+  stylix.targets.gtk.enable = pkgs.stdenv.hostPlatform.isLinux;
+  stylix.targets.qt.enable = pkgs.stdenv.hostPlatform.isLinux;
+  # Not using a KDE or GNOME desktop
   stylix.targets.kde.enable = false;
   stylix.targets.gnome.enable = false;
   # rofi is not used (vicinae is the launcher); its stylix module also sets a renamed option

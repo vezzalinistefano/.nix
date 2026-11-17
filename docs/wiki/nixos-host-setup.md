@@ -136,11 +136,14 @@ Super is the modifier (`modules/hyprland/hyprland.lua`).
 | Super+h/j/k/l | focus (with Shift: move, with Ctrl: resize) |
 | Super+1..0 | workspace (with Shift: send window there) |
 | Super+F / Super+M | fullscreen / maximise |
-| Super+V | toggle floating |
+| Super+V / Super+T | toggle floating / change the split direction |
 | Super+S | scratchpad (with Shift: send window there) |
 | Super+Escape | lock |
-| Super+Shift+E | log out |
+| Super+Ctrl+Shift+E | log out (closes everything without asking) |
 | Print / Shift+Print | screenshot of a region to the clipboard / of the screen to `~/Pictures` |
+| Super+drag / Super+right-drag | move / resize a window with the mouse |
+| three-finger swipe | previous / next workspace |
+| volume, brightness, play keys | as printed on the keyboard; the bar shows `vol` and `bri` |
 | Super+Shift+Space | switch keyboard layout (Italian, US International); the bar shows the active one |
 
 ## 4. Manual steps after the install

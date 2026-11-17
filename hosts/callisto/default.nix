@@ -116,7 +116,22 @@
     };
   };
 
-  # Password store for apps (Secret Service). Spotifast keeps its sign-in here.
+  # Plugged in, closing the lid does not suspend: the laptop stays reachable over SSH and
+  # keeps driving an external monitor. On battery the lid still suspends it.
+  services.logind.settings.Login = {
+    HandleLidSwitchExternalPower = "ignore";
+    HandleLidSwitchDocked = "ignore";
+  };
+
+  # Power: balanced/power-saver/performance profiles (`powerprofilesctl`) and Intel thermal control
+  services.power-profiles-daemon.enable = true;
+  services.thermald.enable = true;
+
+  # Lets GTK apps and browsers read the dark-mode preference and open GTK file dialogs
+  programs.dconf.enable = true;
+  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+
+  # Password store for apps (Secret Service): browsers and other apps keep sign-ins here.
   # With auto-login nothing unlocks it at boot: give the keyring an empty password
   # when it first asks, the disk encryption already protects it.
   services.gnome.gnome-keyring.enable = true;

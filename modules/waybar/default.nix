@@ -8,16 +8,18 @@ _: {
       position = "top";
       height = 24;
       spacing = 12;
-      modules-left = [ "hyprland/workspaces" ];
-      modules-center = [
-        "clock"
+      # The song sits on the left so the clock does not move when the title changes
+      modules-left = [
+        "hyprland/workspaces"
         "mpris"
       ];
+      modules-center = [ "clock" ];
       modules-right = [
         "tray"
         "hyprland/language"
         "network"
         "wireplumber"
+        "backlight"
         "battery"
       ];
 
@@ -33,7 +35,7 @@ _: {
           playing = ">";
           paused = "||";
         };
-        max-length = 50;
+        max-length = 40;
         tooltip-format = "{player}: {album}";
       };
       # Icons of apps that keep running after their window is closed
@@ -50,10 +52,19 @@ _: {
         format-ethernet = "eth";
         format-disconnected = "offline";
         tooltip-format = "{ifname} {ipaddr}";
+        # Click: pick a Wi-Fi network
+        on-click = "ghostty -e nmtui";
       };
       wireplumber = {
         format = "vol {volume}%";
         format-muted = "muted";
+        # Click: choose outputs and per-app volume
+        on-click = "pavucontrol";
+      };
+      # Screen brightness, so the brightness keys show their effect
+      backlight = {
+        format = "bri {percent}%";
+        tooltip = false;
       };
       battery = {
         format = "bat {capacity}%";

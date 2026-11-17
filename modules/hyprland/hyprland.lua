@@ -77,7 +77,8 @@ hl.bind(mod .. " + SHIFT + Space",  hl.dsp.exec_cmd("hyprctl switchxkblayout all
 -- Clipboard history
 hl.bind(mod .. " + SHIFT + V",      hl.dsp.exec_cmd("vicinae vicinae://extensions/vicinae/clipboard/history"))
 hl.bind(mod .. " + Escape",         hl.dsp.exec_cmd("loginctl lock-session"))
-hl.bind(mod .. " + SHIFT + E",      hl.dsp.exit())
+-- Log out. Four keys on purpose: it closes every app without asking
+hl.bind(mod .. " + CTRL + SHIFT + E", hl.dsp.exit())
 
 -- Windows
 hl.bind(mod .. " + Q",         hl.dsp.window.close())
@@ -116,7 +117,7 @@ hl.bind(mod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
 -- Screenshots: region to clipboard, or the whole screen to ~/Pictures
 hl.bind("Print",         hl.dsp.exec_cmd("grim -g \"$(slurp)\" - | wl-copy"))
-hl.bind("SHIFT + Print", hl.dsp.exec_cmd("mkdir -p ~/Pictures && grim ~/Pictures/$(date +%F-%H%M%S).png"))
+hl.bind("SHIFT + Print", hl.dsp.exec_cmd("mkdir -p ~/Pictures && f=~/Pictures/$(date +%F-%H%M%S).png && grim $f && notify-send -t 2000 Screenshot $f"))
 
 -- ThinkPad media keys
 hl.bind("XF86AudioRaiseVolume",  hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"), { locked = true, repeating = true })
@@ -135,4 +136,13 @@ hl.window_rule({
     match = { class = ".*" },
 
     suppress_event = "maximize",
+})
+
+-- Small utility windows float in the middle instead of taking half the screen
+hl.window_rule({
+    name  = "float-dialogs",
+    match = { class = "^(org\\.pulseaudio\\.pavucontrol|pavucontrol|pinentry-qt|hyprpolkitagent|org\\.kde\\.polkit-kde-authentication-agent-1)$" },
+
+    float  = true,
+    center = true,
 })
