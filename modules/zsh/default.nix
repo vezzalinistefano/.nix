@@ -1,20 +1,25 @@
 { lib, pkgs, ... }:
 let
+  isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
+  # Where this repo sits: /private/etc/nix-darwin on the Macs, a clone in the home
+  # directory on the NixOS host.
+  repoPath = if isDarwin then "/private/etc/nix-darwin" else "$HOME/.nix";
+
   # Rebuild shortcuts differ per system: the Macs rebuild themselves with darwin-rebuild and
   # deploy NixOS hosts over SSH; a NixOS host rebuilds itself from its own clone in ~/.nix
   rebuildAliases =
-    if pkgs.stdenv.hostPlatform.isDarwin then
+    if isDarwin then
       {
         # nix-darwin: rebuild and switch
-        drs = "sudo darwin-rebuild switch --flake /private/etc/nix-darwin";
+        drs = "sudo darwin-rebuild switch --flake ${repoPath}";
         # nix-darwin: build without switching (test first)
-        drb = "darwin-rebuild build --flake /private/etc/nix-darwin";
-        # nix-darwin: check flake syntax
-        drc = "nix flake check /private/etc/nix-darwin";
+        drb = "darwin-rebuild build --flake ${repoPath}";
+        # nix-darwin: run the flake checks (formatting, scripts, evaluation)
+        drc = "nix flake check ${repoPath}";
         # nix-darwin: update packages and rebuild
-        dru = "nix flake update --flake /private/etc/nix-darwin && sudo darwin-rebuild switch --flake /private/etc/nix-darwin";
+        dru = "nix flake update --flake ${repoPath} && sudo darwin-rebuild switch --flake ${repoPath}";
         # nix-darwin: format nix files
-        drf = "nixfmt /private/etc/nix-darwin";
+        drf = "nix fmt ${repoPath}";
         # NixOS hosts, deployed from this Mac: build on the host itself and switch (asks for its sudo password)
         nrs = "nixos-deploy switch";
         # NixOS hosts: build and activate without making it the boot default (a reboot undoes it)
@@ -22,88 +27,105 @@ let
       }
     else
       {
-        # NixOS: rebuild this machine from ~/.nix and switch
-        nrs = "sudo nixos-rebuild switch --flake ~/.nix";
+        # NixOS: rebuild this machine from its clone and switch
+        nrs = "sudo nixos-rebuild switch --flake ${repoPath}";
         # NixOS: build and activate without making it the boot default (a reboot undoes it)
-        nrt = "sudo nixos-rebuild test --flake ~/.nix";
+        nrt = "sudo nixos-rebuild test --flake ${repoPath}";
         # NixOS: build only, to check a change
-        nrb = "nixos-rebuild build --flake ~/.nix";
+        nrb = "nixos-rebuild build --flake ${repoPath}";
       };
 
-  myAliases = rebuildAliases // {
-    # git: basics
-    gadd = "git add -v";
-    gaddi = "git add --interactive";
-    gcom = "git commit";
-    gcomm = "git commit -m";
-    gclone = "git clone";
-    gcloneclip = "git clone $(getclip)";
-    # git: logs
-    glog = "git log --all --decorate --oneline --graph";
-    glog2 = "git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all";
-    glo = "git log --oneline";
-    gsho = "git show --oneline";
-    gsh = "git show";
-    gsta = "git status";
-    gst = "git status";
-    # git: fetch updated
-    gfa = "git fetch --all";
-    gfap = "git fetch --all --prune --prune-tags";
-    gfrm = "git fetch --all --prune --prune-tags && git rebase origin/main";
-    gpu = "git pull && git submodule update --checkout";
-    # git:branching
-    gch = "git checkout";
-    gchb = "git checkout -b";
-    gbd = "git branch -d";
-    gbl = "git branch --list";
-    gp = "git push";
-    gpd = "git push origin --delete";
-    gmerg = "git merge --edit --stat --no-ff";
-    gmerge = "git merge --edit --stat --no-ff";
-    gcpx = "git cherry-pick -x";
-    # git: submodules
-    gsupc = "git submodule update --checkout";
-    # vim
-    vim = "nvim";
-    # vim: git client
-    vimg = "nvim +G +only";
-    # vim: open current folder
-    e = "nvim .";
-    # cd ..
-    ".." = "cd ..";
-    # cd ../..
-    "..." = "cd ../..";
-    # cd ../../..
-    "...." = "cd ../../..";
-    # safer cp
-    cp = "cp -iv";
-    # safer rm
-    rm = "rm -Iv";
-    # safer mv
-    mv = "mv -v";
+  # kubectl and argocd come from ../work, which only the Macs import
+  workAliases =
+    if isDarwin then
+      {
+        k = "kubectl";
+        kctx = "kubectl config use-context $(kubectl config get-contexts --no-headers| awk '{print $2}' | fzf)";
+        argocd = "argocd --grpc-web";
+      }
+    else
+      { };
 
-    git-list-untracked = "git fetch --prune && git branch -r | awk \"{print \$1}\" | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk \"{print \$1}\"";
-    git-remove-untracked = "git fetch --prune && git branch -r | awk \"{print \$1}\" | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk \"{print \$1}\" | xargs git branch -d";
+  myAliases =
+    rebuildAliases
+    // workAliases
+    // {
+      # git: basics
+      gadd = "git add -v";
+      gaddi = "git add --interactive";
+      gcom = "git commit";
+      gcomm = "git commit -m";
+      gclone = "git clone";
+      gcloneclip = "git clone $(getclip)";
+      # git: logs
+      glog = "git log --all --decorate --oneline --graph";
+      glog2 = "git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all";
+      glo = "git log --oneline";
+      gsho = "git show --oneline";
+      gsh = "git show";
+      gsta = "git status";
+      gst = "git status";
+      # git: fetch updated
+      gfa = "git fetch --all";
+      gfap = "git fetch --all --prune --prune-tags";
+      gfrm = "git fetch --all --prune --prune-tags && git rebase origin/main";
+      gpu = "git pull && git submodule update --checkout";
+      # git:branching
+      gch = "git checkout";
+      gchb = "git checkout -b";
+      gbd = "git branch -d";
+      gbl = "git branch --list";
+      gp = "git push";
+      gpd = "git push origin --delete";
+      gmerg = "git merge --edit --stat --no-ff";
+      gmerge = "git merge --edit --stat --no-ff";
+      gcpx = "git cherry-pick -x";
+      # git: submodules
+      gsupc = "git submodule update --checkout";
+      # vim
+      vim = "nvim";
+      # vim: git client
+      vimg = "nvim +G +only";
+      # vim: open current folder
+      e = "nvim .";
+      # cd ..
+      ".." = "cd ..";
+      # cd ../..
+      "..." = "cd ../..";
+      # cd ../../..
+      "...." = "cd ../../..";
+      # safer cp
+      cp = "cp -iv";
+      # safer rm
+      rm = "rm -Iv";
+      # safer mv
+      mv = "mv -v";
 
-    # kubectl
-    k = "kubectl";
-    kctx = "kubectl config use-context $(kubectl config get-contexts --no-headers| awk '{print $2}' | fzf)";
+      git-list-untracked = "git fetch --prune && git branch -r | awk \"{print \$1}\" | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk \"{print \$1}\"";
+      git-remove-untracked = "git fetch --prune && git branch -r | awk \"{print \$1}\" | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk \"{print \$1}\" | xargs git branch -d";
 
-    ls = "ls --color=auto";
+      # kubectl and argocd moved into workAliases above, they only exist on the Macs
+      ls = if isDarwin then "ls -G" else "ls --color=auto";
 
-    argocd = "argocd --grpc-web";
+      sg = "ast-grep";
 
-    sg = "ast-grep";
+      # claude code session reachable from a telegram bot
+      tg = "claude --channels plugin:telegram@claude-plugins-official";
 
-    # claude code session reachable from a telegram bot
-    tg = "claude --channels plugin:telegram@claude-plugins-official";
-
-    # Fuzzy finding
-    cdf = "cd $(find . -type d 2> /dev/null | fzf)"; # fuzzy find from current directory
-    cdw = "cd $(git worktree list | awk '{ print $1 }' | fzf)"; # fuzzy find across git worktrees
-  };
+      # Fuzzy finding
+      cdf = "cd $(find . -type d 2> /dev/null | fzf)"; # fuzzy find from current directory
+      cdw = "cd $(git worktree list | awk '{ print $1 }' | fzf)"; # fuzzy find across git worktrees
+    };
 in
 {
+  # The worktree/branch cleanup called by the shell function below; packaged so both
+  # platforms find it on PATH instead of through a hardcoded repo path
+  home.packages = [
+    (pkgs.writeShellScriptBin "git-cleanup-orphaned.sh" (
+      builtins.readFile ../../scripts/git-cleanup-orphaned.sh
+    ))
+  ];
+
   programs.starship = {
     enable = true;
   };
@@ -156,13 +178,14 @@ in
             local action=$1 host=''${2:?usage: nrs|nrt <host> [ssh-destination]}
             local dest=''${3:-sv@$host.local}
             nixos-rebuild "$action" --no-reexec \
-              --flake "/private/etc/nix-darwin#$host" \
+              --flake "${repoPath}#$host" \
               --target-host "$dest" --build-host "$dest" \
               --sudo --ask-sudo-password
           }
 
+          # The script is on PATH (packaged below), so the path does not matter
           git-cleanup-orphaned() {
-            /private/etc/nix-darwin/scripts/git-cleanup-orphaned.sh "$@"
+            git-cleanup-orphaned.sh "$@"
           }
 
           # Fuzzy-pick a git repo or worktree and open/attach its tmux session
@@ -171,7 +194,7 @@ in
             if [ -n "$PROJECT_ROOTS" ]; then
               roots=(''${=PROJECT_ROOTS})
             else
-              roots=("$HOME/projects" /private/etc/nix-darwin)
+              roots=("$HOME/projects" ${repoPath})
             fi
 
             local dir

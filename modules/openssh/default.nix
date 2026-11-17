@@ -4,8 +4,11 @@ let
 in
 {
   # Remote Login (Apple's built-in sshd), key-only and limited to the primary user.
+  # Off by default: the deploy direction is Mac → callisto, and with no key listed
+  # (`authorizedKeys` below) sshd would accept connections and reject every login.
+  # Turn it on after filling `users.users.${user}.openssh.authorizedKeys.keys`.
   services.openssh = {
-    enable = true;
+    enable = false;
     # Lands in /etc/ssh/sshd_config.d/100-nix-darwin.conf. sshd keeps the first
     # value it reads, and the Include sits at the top of /etc/ssh/sshd_config, so
     # these override its defaults (100-macos.conf only sets UsePAM/AcceptEnv/crypto).
