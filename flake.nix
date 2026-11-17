@@ -68,12 +68,21 @@
 
   outputs =
     inputs@{
+      self,
       nixpkgs,
       darwin,
       home-manager,
       ...
     }:
     let
+      # Everything below that is not a host exists for both platforms: the Macs cannot
+      # build Linux, but they still evaluate, format and lint (and the reverse).
+      systems = [
+        "aarch64-darwin"
+        "x86_64-linux"
+      ];
+      forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f nixpkgs.legacyPackages.${system});
+
       # Every host shares ./home/common. The Macs also share ./hosts/common, and
       # ./hosts/<hostname> only holds their machine-specific overrides.
       mkDarwinHost =
@@ -134,7 +143,23 @@
         "callisto" = mkNixosHost { hostname = "callisto"; };
       };
 
-      # `nix fmt` formats every .nix file in the repo with nixfmt
-      formatter.aarch64-darwin = inputs.nixpkgs.legacyPackages.aarch64-darwin.nixfmt-tree;
+      # `nix fmt` formats every .nix file in the repo with nixfmt, on both platforms
+      formatter = forAllSystems (pkgs: pkgs.nixfmt-tree);
+
+      # What `nix flake check` runs, and what CI gates `main` on before callisto
+      # installs it: nothing here builds a host, so it stays fast on a laptop.
+      checks = forAllSystems (pkgs: {
+        format = pkgs.runCommand "format-check" { nativeBuildInputs = [ pkgs.nixfmt-tree ]; } ''
+          cp -r ${self} ./src
+          chmod -R u+w ./src
+          cd ./src
+          treefmt --ci --tree-root .
+          touch $out
+        '';
+        scripts = pkgs.runCommand "scripts-check" { nativeBuildInputs = [ pkgs.shellcheck ]; } ''
+          shellcheck ${self}/scripts/*.sh
+          touch $out
+        '';
+      });
     };
 }
