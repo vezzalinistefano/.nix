@@ -1,0 +1,11 @@
+# Captures are large and regrow on demand
+captures/
+# Vendored dissector + lockbox
+tools/vendor/
+# Driver build dir
+driver/build/
+# Python bytecode from the tools
+__pycache__/
+
+# Distilled findings live in notes/, not in the ignored captures
+!captures/.gitkeep

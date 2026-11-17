@@ -1,0 +1,4 @@
+# Bind the reader to this TOD driver. libfprint-tod reads the LIBFPRINT_DRIVER tag,
+# loads /usr/lib/libfprint-2/tod-1/libfprint-tod-<tag>.so and calls its entry point.
+SUBSYSTEM=="usb", ATTRS{idVendor}=="06cb", ATTRS{idProduct}=="009a", ATTRS{dev}=="*", TEST=="power/control", ATTR{power/control}="auto", MODE="0660"
+SUBSYSTEM=="usb", ATTRS{idVendor}=="06cb", ATTRS{idProduct}=="009a", ENV{LIBFPRINT_DRIVER}="vcsfw"

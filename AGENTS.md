@@ -24,6 +24,8 @@ This is Stefano Vezzalini's personal nix-darwin configuration managing macOS sys
 ├── home/work/                   # Work tooling (cloud, Kubernetes, Terraform, Slack); Macs only
 ├── home/linux/                  # Linux desktop user configuration (Hyprland)
 ├── docs/wiki/                   # Wiki pages (e.g. new-host setup guide)
+├── projects/                    # Standalone experiments that are not part of the system
+│   └── validity-re/             # 06cb:009a fingerprint RE lab (own flake, own README)
 ├── modules/                     # Reusable configuration modules
 │   ├── nixvim/                  # Neovim configuration
 │   ├── zsh/                     # Shell configuration

@@ -1,0 +1,12 @@
+# Give the lab shell access to the reader without root.
+#
+# Installed to /etc/udev/rules.d/99-vcsfw-lab.rules. uaccess is a systemd-udevd tag that
+# hands the logged-in user ACLs on the node, which is enough for pyusb to claim it.
+#
+# Note this only grants access; it does not stop python3-validity from opening the device
+# too. Stop that service before probing.
+SUBSYSTEM=="usb", ATTRS{idVendor}=="06cb", ATTRS{idProduct}=="009a", TAG+="uaccess", MODE="0660"
+
+# Keep the reader out of autosuspend while experimenting: a suspended device silently
+# eats the first control transfer and looks like a timeout bug in our code.
+ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="06cb", ATTRS{idProduct}=="009a", ATTR{power/control}="on"
