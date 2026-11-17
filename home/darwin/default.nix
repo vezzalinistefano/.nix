@@ -20,5 +20,5 @@
   # Deploys the NixOS hosts from the Mac (`nrs <host>` in modules/zsh)
   home.packages = [ pkgs.nixos-rebuild ];
 
-  home.stateVersion = "25.05";
+  home.stateVersion = "26.05";
 }

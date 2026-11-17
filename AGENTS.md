@@ -30,7 +30,7 @@ This is Stefano Vezzalini's personal nix-darwin configuration managing macOS sys
 │   ├── tmux/                    # Terminal multiplexer
 │   ├── vscode/                  # VSCode configuration
 │   ├── ghostty/                 # Terminal emulator
-│   ├── yabai/                   # Window manager
+│   ├── skhd/                    # Global hotkeys (yabai/ is present but off)
 │   └── [other tools]
 ├── dev-shells/                  # Development environment flakes
 ├── flakes/                      # Standalone tool flakes
