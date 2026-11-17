@@ -14,6 +14,9 @@
   # Plugins are installed imperatively (pinned refs):
   #   herdr plugin install paulbkim-dev/vim-herdr-navigation --yes
   #   herdr plugin install thanhdat77/herdr-navigator --ref v0.3.6 --yes
+  #   herdr plugin install persiyanov/herdr-reviewr --ref v0.52.2 --yes
+  # vim-herdr-navigation's shell passthrough (Ctrl+L/K stay with the shell) comes
+  # from HERDR_NAV_PASSTHROUGH_RE, set in modules/hyprland for the greetd session.
   home.activation.herdrConfigSeed = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     if [ ! -e "$HOME/.config/herdr/config.toml" ]; then
       run mkdir -p "$HOME/.config/herdr"
