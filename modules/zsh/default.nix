@@ -3,7 +3,7 @@ let
   # Rebuild shortcuts differ per system: the Macs rebuild themselves with darwin-rebuild and
   # deploy NixOS hosts over SSH; a NixOS host rebuilds itself from its own clone in ~/.nix
   rebuildAliases =
-    if pkgs.stdenv.isDarwin then
+    if pkgs.stdenv.hostPlatform.isDarwin then
       {
         # nix-darwin: rebuild and switch
         drs = "sudo darwin-rebuild switch --flake /private/etc/nix-darwin";
