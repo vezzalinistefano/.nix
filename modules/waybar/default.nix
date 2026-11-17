@@ -1,13 +1,128 @@
 _: {
-  # One thin bar: workspaces, clock, and the laptop basics. Colours and font come from stylix.
+  # One thin bar: workspaces, clock, and the laptop basics. The palette (@baseXX) and the
+  # font still come from stylix, but its default flat bar is replaced by the rules below.
+  stylix.targets.waybar.addCss = false;
   programs.waybar = {
     enable = true;
     systemd.enable = true;
+    style = ''
+      * {
+        border: none;
+        border-radius: 0;
+        min-height: 0;
+      }
+
+      /* Floating card, gapped off the screen edge like the notifications */
+      window#waybar {
+        background: alpha(@base00, 0.92);
+        border: 2px solid @base02;
+        border-radius: 10px;
+        color: @base05;
+        margin: 6px 8px;
+      }
+
+      tooltip {
+        background: alpha(@base00, 0.95);
+        border: 2px solid @base0D;
+        border-radius: 10px;
+        color: @base05;
+      }
+
+      .modules-left,
+      .modules-center,
+      .modules-right {
+        padding: 2px 6px;
+      }
+
+      /* Quiet pills; only the time, the language and the urgent states get colour */
+      #clock,
+      #mpris,
+      #tray,
+      #language,
+      #network,
+      #wireplumber,
+      #backlight,
+      #battery {
+        background: alpha(@base01, 0.85);
+        border-radius: 8px;
+        margin: 3px 2px;
+        padding: 0 10px;
+      }
+
+      #clock {
+        background: @base0D;
+        color: @base00;
+        font-weight: bold;
+        padding: 0 14px;
+      }
+
+      #mpris {
+        color: @base04;
+      }
+      #mpris.playing {
+        color: @base05;
+      }
+
+      #language {
+        color: @base0C;
+        font-weight: bold;
+      }
+
+      #network.disconnected,
+      #battery.warning {
+        color: @base0A;
+      }
+      #battery.critical:not(.charging) {
+        background: @base08;
+        color: @base00;
+      }
+      #battery.charging,
+      #battery.plugged {
+        color: @base0B;
+      }
+
+      #wireplumber.muted {
+        color: @base03;
+      }
+
+      #tray {
+        padding: 0 6px;
+      }
+      #tray > .passive {
+        -gtk-icon-effect: dim;
+      }
+
+      /* Workspaces stay flat: the active one is the only filled pill */
+      #workspaces {
+        background: transparent;
+        margin: 3px 2px;
+      }
+      #workspaces button {
+        background: alpha(@base01, 0.85);
+        border-radius: 8px;
+        color: @base04;
+        margin-right: 3px;
+        padding: 0 9px;
+      }
+      #workspaces button:hover {
+        background: @base02;
+        color: @base05;
+      }
+      #workspaces button.active,
+      #workspaces button.focused {
+        background: @base0E;
+        color: @base00;
+      }
+      #workspaces button.urgent {
+        background: @base08;
+        color: @base00;
+      }
+    '';
     settings.main = {
       layer = "top";
       position = "top";
-      height = 24;
-      spacing = 12;
+      height = 28;
+      spacing = 10;
       # The song sits on the left so the clock does not move when the title changes
       modules-left = [
         "hyprland/workspaces"

@@ -1,5 +1,6 @@
 -- Hyprland (Lua config, 0.57+). Appended to the file home-manager generates,
--- after the stylix colours. Kept plain: no animations, blur, shadows or rounding.
+-- after the stylix colours. Rounded corners, a soft shadow and animations; no blur,
+-- the integrated GPU on the T480 has enough to do.
 
 hl.monitor({
     output   = "",
@@ -17,13 +18,17 @@ hl.config({
     },
 
     decoration = {
-        rounding = 0,
-        shadow   = { enabled = false },
+        rounding = 10,
+        shadow   = {
+            enabled      = true,
+            range        = 12,
+            render_power = 3,
+        },
         blur     = { enabled = false },
     },
 
     animations = {
-        enabled = false,
+        enabled = true,
     },
 
     dwindle = {
@@ -58,6 +63,26 @@ hl.config({
     },
 })
 
+-- Animations: the slide/pop feel Hyprland is known for, at speeds the T480's iGPU can hold.
+-- No blur or window transparency: those are the expensive ones.
+hl.curve("easeOutQuint", { type = "bezier", points = { { 0.23, 1 }, { 0.32, 1 } } })
+hl.curve("quick",        { type = "bezier", points = { { 0.15, 0 }, { 0.1, 1 } } })
+hl.curve("almostLinear", { type = "bezier", points = { { 0.5, 0.5 }, { 0.75, 1 } } })
+hl.curve("easy",         { type = "spring", mass = 1, stiffness = 238.1191, damping = 24.21279333 })
+
+hl.animation({ leaf = "global",     enabled = true, speed = 10,   bezier = "default" })
+hl.animation({ leaf = "windows",    enabled = true, speed = 4.79, spring = "easy" })
+hl.animation({ leaf = "windowsIn",  enabled = true, speed = 4.1,  spring = "easy",         style = "popin 90%" })
+hl.animation({ leaf = "windowsOut", enabled = true, speed = 2.0,  bezier = "quick",        style = "popin 90%" })
+hl.animation({ leaf = "fadeIn",     enabled = true, speed = 1.73, bezier = "almostLinear" })
+hl.animation({ leaf = "fadeOut",    enabled = true, speed = 1.46, bezier = "almostLinear" })
+hl.animation({ leaf = "fade",       enabled = true, speed = 3.03, bezier = "quick" })
+hl.animation({ leaf = "layers",     enabled = true, speed = 3.81, bezier = "easeOutQuint" })
+hl.animation({ leaf = "layersIn",   enabled = true, speed = 4,    bezier = "easeOutQuint", style = "fade" })
+hl.animation({ leaf = "layersOut",  enabled = true, speed = 1.5,  bezier = "quick",        style = "fade" })
+hl.animation({ leaf = "workspaces", enabled = true, speed = 3.5,  bezier = "easeOutQuint", style = "slide" })
+hl.animation({ leaf = "zoomFactor", enabled = true, speed = 7,    bezier = "quick" })
+
 -- Three-finger swipe between workspaces
 hl.gesture({
     fingers   = 3,
@@ -67,12 +92,20 @@ hl.gesture({
 
 local mod = "SUPER"
 
+-- herdr's vim-herdr-navigation owns Ctrl+h/j/k/l (modules/herdr). Let shells keep
+-- them: Ctrl+L clears, Ctrl+K kills the line. Leave shell panes with prefix+h/j/k/l.
+hl.env("HERDR_NAV_PASSTHROUGH_RE", "^(zsh|bash)$")
+
 -- Programs. Super+Return opens Ghostty on herdr, like Cmd+Alt+Return on the Macs (modules/skhd)
 hl.bind(mod .. " + Return",         hl.dsp.exec_cmd("ghostty -e herdr"))
 hl.bind(mod .. " + SHIFT + Return", hl.dsp.exec_cmd("ghostty"))
 -- Launcher (modules/vicinae), like Cmd+Space with Raycast on the Macs
 hl.bind(mod .. " + Space",          hl.dsp.exec_cmd("vicinae toggle"))
 hl.bind(mod .. " + B",              hl.dsp.exec_cmd("librewolf"))
+-- File manager, also where udiskie's mounted drives show up
+hl.bind(mod .. " + E",              hl.dsp.exec_cmd("nautilus --no-default-window"))
+-- Another wallpaper from ~/Pictures/Wallpapers (modules/awww)
+hl.bind(mod .. " + W",              hl.dsp.exec_cmd("wallpaper-next"))
 hl.bind(mod .. " + SHIFT + Space",  hl.dsp.exec_cmd("hyprctl switchxkblayout all next"))
 -- Clipboard history
 hl.bind(mod .. " + SHIFT + V",      hl.dsp.exec_cmd("vicinae vicinae://extensions/vicinae/clipboard/history"))

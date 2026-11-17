@@ -3,16 +3,20 @@
 { pkgs, ... }:
 {
   imports = [
+    ../../modules/awww
     ../../modules/claude-code
     ../../modules/direnv
     ../../modules/feather
     ../../modules/gpg-agent
+    ../../modules/gpg-tui
     ../../modules/hyprland
     ../../modules/hyprpolkitagent
     ../../modules/hyprlock
     ../../modules/librewolf
     ../../modules/mako
+    ../../modules/nautilus
     ../../modules/opencode
+    ../../modules/udiskie
     ../../modules/vicinae
     ../../modules/vscodium
     ../../modules/waybar
@@ -31,10 +35,12 @@
   # Tell apps and websites that the desktop is dark
   dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
 
-  # Notification at 15% battery, again at 8%
+  # Notification at 15% battery, again at 8%. -i: the removable BAT1 reports no
+  # energy_full while it is empty, which otherwise aborts the daemon at start.
   services.batsignal = {
     enable = true;
     extraArgs = [
+      "-i"
       "-w"
       "15"
       "-c"

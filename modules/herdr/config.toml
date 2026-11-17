@@ -64,6 +64,14 @@ type = "plugin_action"
 command = "herdr-navigator.jump-back"
 description = "previous workspace"
 
+# Review the agent's diff beside the chat, comment on lines (herdr-reviewr).
+# It also opens itself when herdr creates a workspace for a worktree.
+[[keys.command]]
+key = "prefix+v"
+type = "plugin_action"
+command = "persiyanov.reviewr.toggle"
+description = "review agent diff"
+
 # Popups mirroring the tmux ones
 [[keys.command]]
 key = "prefix+g"
