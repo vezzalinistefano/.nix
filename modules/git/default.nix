@@ -20,7 +20,7 @@ _:
         commit.gpgsign = true;
         tag.gpgsign = true;
         init = {
-          defaultBranch = "master";
+          defaultBranch = "main";
         };
         pull = {
           rebase = true;

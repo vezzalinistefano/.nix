@@ -49,7 +49,7 @@ let
     # git: fetch updated
     gfa = "git fetch --all";
     gfap = "git fetch --all --prune --prune-tags";
-    gfrm = "git fetch --all --prune --prune-tags && git rebase origin/master";
+    gfrm = "git fetch --all --prune --prune-tags && git rebase origin/main";
     gpu = "git pull && git submodule update --checkout";
     # git:branching
     gch = "git checkout";
