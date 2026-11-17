@@ -62,6 +62,7 @@
     # username and homeDirectory come from the host's users.users.<name>;
     # stateVersion is set per platform (home/darwin, home/linux)
     sessionPath = [ "$HOME/.local/bin" ];
+    sessionVariables.GHQ_ROOT = "$HOME/projects"; # ghq root (juno lives here)
   };
 
   programs.home-manager.enable = true;
