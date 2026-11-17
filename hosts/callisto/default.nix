@@ -208,6 +208,21 @@
   # Firmware updates: `fwupdmgr refresh && fwupdmgr update`
   services.fwupd.enable = true;
 
+  # Say it out loud when the daily upgrade fails, instead of leaving it in the journal
+  systemd.services.nixos-upgrade.onFailure = [ "nixos-upgrade-failed.service" ];
+  systemd.services.nixos-upgrade-failed = {
+    description = "Report a failed nixos-upgrade";
+    serviceConfig.Type = "oneshot";
+    script = ''
+      msg="nixos-upgrade failed on $(hostname): journalctl -u nixos-upgrade"
+      ${pkgs.util-linux}/bin/wall "$msg" || true
+      bus=/run/user/$(id -u ${username})/bus
+      ${pkgs.util-linux}/bin/runuser -u ${username} -- \
+        env DBUS_SESSION_BUS_ADDRESS=unix:path="$bus" \
+        ${pkgs.libnotify}/bin/notify-send "NixOS upgrade failed" "journalctl -u nixos-upgrade" || true
+    '';
+  };
+
   fonts.packages = with pkgs; [
     nerd-fonts.hack
     noto-fonts
