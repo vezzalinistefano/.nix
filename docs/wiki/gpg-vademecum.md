@@ -98,6 +98,22 @@ gpg> trust
 gpg> quit
 ```
 
+### From Bitwarden instead of files
+
+Both secret keys are stored in the vault, as a note with the key itself plus a `passphrase` field (`GPG personal key`, `GPG - iungo key`). On a new machine:
+
+```bash
+bw unlock                              # then export BW_SESSION as it prints
+bw list items --search gpg             # note the item id (type 2 = secure note)
+bw get attachment gpg-personal-secret.asc --itemid ITEM_ID --raw > key.asc
+bw get item ITEM_ID | jq -r '.fields[] | select(.name=="passphrase") | .value'
+gpg --import key.asc                   # import does not need the passphrase
+printf 'FINGERPRINT:6:\n' | gpg --import-ownertrust
+shred -u key.asc
+```
+
+The personal note also carries the revocation certificate: put it in `~/.gnupg/openpgp-revocs.d/FINGERPRINT.rev`. Check that `gpg --list-secret-keys` shows `sec` (not `sec#`, which means the agent did not receive the secret; just re-run the import) and then sign something to prove the passphrase works.
+
 ## 4. Give people your public key
 
 ```bash
@@ -126,6 +142,10 @@ git config --global tag.gpgsign true
 ```
 
 Check which key a folder uses with `git config user.signingkey`, and a commit with `git log --show-signature -1`.
+
+### A frontend instead of commands
+
+`gpg-tui` is installed on callisto (`modules/gpg-tui`) for browsing the keyring: key list, detail and trust view, import, export, encrypt, decrypt, sign. It calls gpg and the agent, so passphrases still go through the window from `modules/gpg-agent`. Press `?` inside it for the key bindings; it stays out of the way of everything else.
 
 ### Encrypt and decrypt files
 
@@ -156,6 +176,8 @@ gpg --encrypt --recipient their@email file.txt
 ### Secrets in a repo with sops
 
 `sops` is installed. It encrypts a YAML or JSON file so secrets can live in git. `.sops.yaml` in the repo root lists who can decrypt: both GPG keys (to edit by hand) and one age key per machine. Files under `secrets/` follow that rule.
+
+Each machine's age identity is a vault note called `age key for sops (<HOSTNAME>)`; `bw get attachment age-keys-<HOSTNAME>.txt --itemid ITEM_ID --raw > ~/.config/sops/age/keys.txt` restores it, and `age-keygen -y` on that file must print the public key listed in `.sops.yaml`.
 
 ```bash
 sops secrets/example.yaml          # opens the decrypted file in $EDITOR, re-encrypts on save
