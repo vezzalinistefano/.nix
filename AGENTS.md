@@ -19,10 +19,12 @@ This is Stefano Vezzalini's personal nix-darwin configuration managing macOS sys
 ├── hosts/common/                # System configuration shared by the Macs
 ├── hosts/<HOSTNAME>/            # Per-host overrides (hostName); one dir per machine
 ├── hosts/callisto/              # NixOS laptop: whole system config, disk layout, hardware scan
+├── hosts/jupiter/               # NixOS home server: headless (desktop = false), same layout
 ├── home/common/                 # User home-manager configuration shared by all hosts
 ├── home/darwin/                 # macOS-only user configuration
 ├── home/work/                   # Work tooling (cloud, Kubernetes, Terraform, Slack); Macs only
 ├── home/linux/                  # Linux desktop user configuration (Hyprland)
+├── home/server/                 # Linux headless user configuration (no desktop)
 ├── docs/wiki/                   # Wiki pages (e.g. new-host setup guide)
 ├── projects/                    # Standalone experiments that are not part of the system
 │   └── validity-re/             # 06cb:009a fingerprint RE lab (own flake, own README)
@@ -179,12 +181,18 @@ apps.spotify.source = "nix";   # or "homebrew"
 ```
 Defaults live in each `app.nix` (spotify is "homebrew", the rest "nix"). To add an app: copy an existing folder and import its `darwin.nix` in `hosts/common/default.nix` and its `default.nix` in `home/darwin/default.nix`.
 
-## NixOS host (callisto)
+## NixOS hosts (callisto, jupiter)
 callisto is a ThinkPad T480 (`x86_64-linux`, user `sv`) with Hyprland, built by `mkNixosHost` in `flake.nix` from `hosts/callisto` plus `home/common` and `home/linux` (no work tooling). The Macs cannot build Linux packages, so they only evaluate: install with nixos-anywhere; callisto then updates itself daily from the `release` branch on GitHub (`system.autoUpgrade`), which CI only advances for a green `main`, or right away with `nrs callisto` (remote `nixos-rebuild`, callisto builds itself). It is a personal machine: personal git identity and GPG key, and its secrets (`secrets/callisto.yaml`, sops) are not readable by the work key. Its home directory is backed up nightly to Backblaze B2 (`services.restic.backups`, credentials in `secrets/restic.yaml`). See `docs/wiki/nixos-host-setup.md`. Check it evaluates with:
 ```bash
 nix eval --raw .#nixosConfigurations.callisto.config.system.build.toplevel.drvPath
 ```
-Modules imported by `home/common` must work on both macOS and Linux; put platform-specific ones in `home/darwin` or `home/linux`.
+
+jupiter is an x86_64 **physical** server (Giga-byte board, Ryzen 5 2600, 15 GiB RAM) that used to run Proxmox on its 1 TB NVMe (hostname `solaris`, static `192.168.1.35` with no internet). The install replaced Proxmox with NixOS on that NVMe; the Samsung SATA disk holding a Windows install is untouched. It is a headless home server, built by the same `mkNixosHost` with `desktop = false`: it gets `home/common` and `home/server` instead of `home/linux`. No desktop, no disk encryption (a reboot must need nothing typed on a keyboard), key-only SSH, `jupiter.local` through avahi and the same daily `release` auto-upgrade; `sv` has no password and `security.sudo.wheelNeedsPassword = false`, so `nrs jupiter` only asks for an empty answer at its password prompt. It has no sops secrets yet. See `docs/wiki/jupiter-setup.md`; check it evaluates with:
+```bash
+nix eval --raw .#nixosConfigurations.jupiter.config.system.build.toplevel.drvPath
+```
+
+Modules imported by `home/common` must work on both macOS and Linux; put platform-specific ones in `home/darwin`, `home/linux` (desktop) or `home/server` (headless).
 
 ## Adding a Host
 See `docs/wiki/new-host-setup.md` (and `docs/wiki/managing-apps.md` for installing and updating apps). In short: create `hosts/<HOSTNAME>/default.nix` (imports `../common`, sets `networking.hostName`) and add `"<HOSTNAME>" = mkDarwinHost { hostname = "<HOSTNAME>"; };` to `flake.nix`.

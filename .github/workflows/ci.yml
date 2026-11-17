@@ -29,3 +29,9 @@ jobs:
 
       - name: Laptop configuration resolves its build graph
         run: nix build --dry-run .#nixosConfigurations.callisto.config.system.build.toplevel
+
+      - name: Server configuration evaluates
+        run: nix eval --raw .#nixosConfigurations.jupiter.config.system.build.toplevel.drvPath
+
+      - name: Server configuration resolves its build graph
+        run: nix build --dry-run .#nixosConfigurations.jupiter.config.system.build.toplevel

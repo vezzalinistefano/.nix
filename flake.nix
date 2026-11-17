@@ -118,11 +118,14 @@
         };
 
       # NixOS hosts keep their whole system configuration in ./hosts/<hostname>.
+      # `desktop = false` is for headless servers: home/common plus home/server
+      # instead of the Hyprland layer in home/linux.
       mkNixosHost =
         {
           hostname,
           system ? "x86_64-linux",
           username ? "sv",
+          desktop ? true,
         }:
         nixpkgs.lib.nixosSystem {
           inherit system;
@@ -134,8 +137,8 @@
               home-manager.useUserPackages = true;
               home-manager.users.${username}.imports = [
                 ./home/common
-                ./home/linux
-              ];
+              ]
+              ++ (if desktop then [ ./home/linux ] else [ ./home/server ]);
               home-manager.backupFileExtension = "backup";
               home-manager.extraSpecialArgs = { inherit inputs; };
             }
@@ -149,6 +152,10 @@
 
       nixosConfigurations = {
         "callisto" = mkNixosHost { hostname = "callisto"; };
+        "jupiter" = mkNixosHost {
+          hostname = "jupiter";
+          desktop = false;
+        };
       };
 
       # `nix fmt` formats every .nix file in the repo with nixfmt, on both platforms

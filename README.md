@@ -1,8 +1,9 @@
 # .nix
 
-Nix flake for Stefano Vezzalini's machines: a nix-darwin Mac (`SWS000135`) and one NixOS
-ThinkPad (`callisto`, Hyprland), both fully declared, sharing one home-manager
-configuration through a small set of per-platform layers.
+Nix flake for Stefano Vezzalini's machines: a nix-darwin Mac (`SWS000135`), one NixOS
+ThinkPad (`callisto`, Hyprland) and one headless NixOS server (`jupiter`), all fully
+declared, sharing one home-manager configuration through a small set of per-platform
+layers.
 
 `AGENTS.md` describes the layout and the conventions in detail; `docs/wiki/` holds the
 runbooks (new host, NixOS host, apps, GPG). Read those before changing a host.
@@ -17,6 +18,9 @@ drb            # build only
 # callisto: from a Mac, over SSH (callisto builds and switches itself)
 nrs callisto
 nrt callisto   # activate without making it the boot default
+
+# jupiter (headless server): same commands; press Enter at the sudo prompt
+nrs jupiter
 
 # callisto updates itself daily from the `release` branch
 ```

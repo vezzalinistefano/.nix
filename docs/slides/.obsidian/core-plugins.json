@@ -1,0 +1,10 @@
+{
+  "slides": true,
+  "file-explorer": true,
+  "global-search": true,
+  "switcher": true,
+  "command-palette": true,
+  "outline": true,
+  "properties": true,
+  "page-preview": true
+}
