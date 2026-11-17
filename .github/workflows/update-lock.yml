@@ -1,0 +1,23 @@
+# Opens a PR with a refreshed flake.lock weekly, so input bumps go through CI instead of
+# an ad-hoc `nix flake update` on a laptop. Merge it like any other change.
+name: Update flake.lock
+
+on:
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: DeterminateSystems/nix-installer-action@v23
+      - uses: DeterminateSystems/update-flake-lock@v29
+        with:
+          pr-title: "chore: update flake.lock"
+          pr-labels: dependencies

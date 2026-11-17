@@ -1,0 +1,31 @@
+# Gates `main`: callisto installs what is on `release`, and `release` only ever gets
+# commits whose CI is green. Nothing here builds a host configuration, so it stays cheap.
+name: CI
+
+on:
+  push:
+    branches: [ main, release ]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: DeterminateSystems/nix-installer-action@v23
+      - uses: DeterminateSystems/magic-nix-cache-action@v15
+
+      - name: Formatting and shell scripts
+        run: nix flake check
+
+      - name: Mac configuration evaluates (aarch64-darwin)
+        run: nix eval --raw .#darwinConfigurations.SWS000135.system.drvPath
+
+      - name: Laptop configuration evaluates
+        run: nix eval --raw .#nixosConfigurations.callisto.config.system.build.toplevel.drvPath
+
+      - name: Laptop configuration resolves its build graph
+        run: nix build --dry-run .#nixosConfigurations.callisto.config.system.build.toplevel
