@@ -12,6 +12,7 @@
     ../../modules/hyprlock
     ../../modules/librewolf
     ../../modules/mako
+    ../../modules/opencode
     ../../modules/vicinae
     ../../modules/vscodium
     ../../modules/waybar

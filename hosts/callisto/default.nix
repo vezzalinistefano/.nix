@@ -25,6 +25,10 @@
     age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
     gnupg.sshKeyPaths = [ ];
     secrets."${username}-password".neededForUsers = true;
+    # API keys for opencode (modules/opencode), readable by the user only.
+    # Set them with: scripts/set-secret.sh callisto <name>
+    secrets."deepseek-api-key".owner = username;
+    secrets."venice-api-key".owner = username;
   };
   networking.networkmanager.enable = true;
 
