@@ -11,8 +11,9 @@ cd "$(dirname "$0")/.."
 file="secrets/$host.yaml"
 key="$user-password"
 
-# SHA-512 crypt: understood by every Linux; openssl asks for the password twice
-hash=$(nix shell nixpkgs#openssl --command openssl passwd -6)
+# SHA-512 crypt: understood by every Linux; openssl asks for the password twice.
+# --inputs-from takes nixpkgs from this flake instead of the registry, so the pin holds.
+hash=$(nix shell --inputs-from . nixpkgs#openssl --command openssl passwd -6)
 # shellcheck disable=SC2016  # the '$6$' prefix must not expand
 case $hash in '$6$'*) ;; *) echo "No hash was produced: nothing changed." >&2; exit 1 ;; esac
 
