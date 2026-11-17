@@ -6,6 +6,8 @@
 # Shared by every host, macOS and NixOS. Platform and work-only parts live in
 # ../darwin, ../linux and ../work; flake.nix picks the set for each host.
 {
+  # Home-manager evaluates its own nixpkgs here, so the host setting does not reach it
+  # (raycast and the other unfree apps are installed from this module).
   nixpkgs.config.allowUnfree = true;
   imports = [
     inputs.nixvim.homeModules.nixvim
@@ -15,9 +17,7 @@
     ../../modules/ast-grep
     ../../modules/bitwarden-cli
     ../../modules/bun
-    # ../../modules/checkov  # Disabled: causes OOM during build (pulls in heavy data science deps)
-    # ../../modules/claude-code
-    # ../../modules/direnv
+    ../../modules/devenv
     ../../modules/fd
     ../../modules/fira-code-nerd-font
     ../../modules/fzf
@@ -36,14 +36,11 @@
     ../../modules/lazygit
     ../../modules/llama-cpp
     ../../modules/mdformat
-    ../../modules/nixfmt
     ../../modules/nixvim
     ../../modules/nmap
     ../../modules/obsidian
-    # ../../modules/opencode # nixpkgs opencode 2.2.5 node_modules fails to build; installed via Homebrew
     ../../modules/poetry
     ../../modules/poppler
-    ../../modules/pre-commit
     ../../modules/python3
     ../../modules/ripgrep
     ../../modules/sops

@@ -1,0 +1,15 @@
+# Runs before a commit; install once per clone with `pre-commit install`.
+# `nix flake check` runs the same two checks over the whole tree in CI.
+repos:
+  - repo: local
+    hooks:
+      - id: nixfmt
+        name: nixfmt
+        entry: nixfmt
+        language: system
+        types: [nix]
+      - id: shellcheck
+        name: shellcheck
+        entry: shellcheck
+        language: system
+        types: [shell]
