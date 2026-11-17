@@ -17,6 +17,15 @@ creation_rules:
         age:
           - *age_SWS000135
           - *age_callisto
+  # Backup credentials: only the machines that run and edit the backup need them.
+  # Add *pgp_personal here (and `sops updatekeys`) once the public key is at hand; it is
+  # not on a keyserver, so it cannot be collected automatically. Rules are tried in order,
+  # so this one has to sit above the catch-all below.
+  - path_regex: secrets/restic\.yaml$
+    key_groups:
+      - age:
+          - *age_SWS000135
+          - *age_callisto
   - path_regex: secrets/.*\.yaml$
     key_groups:
       - pgp:

@@ -146,7 +146,42 @@ Super is the modifier (`modules/hyprland/hyprland.lua`).
 | volume, brightness, play keys | as printed on the keyboard; the bar shows `vol` and `bri` |
 | Super+Shift+Space | switch keyboard layout (Italian, US International); the bar shows the active one |
 
-## 4. Manual steps after the install
+## 4. Backup (restic to Backblaze B2)
+
+`services.restic.backups.b2` in `hosts/callisto/default.nix` copies the home directory to
+the private B2 bucket `callisto` nightly, encrypted client-side. It only runs once the
+credentials are set:
+
+1. Create the bucket and an application key restricted to it in the B2 console, region
+   `eu-central-003`.
+2. On the Mac, with the personal sops key available (the first argument is the file under
+   `secrets/`, here `restic`):
+
+   ```bash
+   # the repo passphrase: generate one and also keep it in the password manager,
+   # it is not recoverable
+   scripts/set-secret.sh restic restic-password
+   # the app key, as two lines: AWS_ACCESS_KEY_ID=… and AWS_SECRET_ACCESS_KEY=…
+   scripts/set-secret.sh restic restic-env
+   ```
+3. Commit, `nrs callisto`, then on callisto
+   `sudo systemctl start restic-backups-b2` and check `sudo restic snapshots`.
+
+Without step 2 the timer fails harmlessly. `initialize = true` creates the repository on
+the first successful run; if it already ran with the placeholder passphrase, change it with
+`restic key add` / `restic key remove` rather than editing the config.
+
+Restore onto a fresh install after mounting the LUKS root:
+
+```bash
+sudo restic restore latest --target /       # asks for the repo passphrase
+sudo restic snapshots                       # or: -t <snapshot> to pick an older one
+```
+
+Keys stay outside the machine on purpose: the app key and the passphrase belong in the
+password manager, and `~/.gnupg` plus `~/.config/sops/age/keys.txt` are exported there too.
+
+## 5. Manual steps after the install
 
 - **Wi-Fi**: `nmtui`.
 - **Bluetooth**: `bluetoothctl`.

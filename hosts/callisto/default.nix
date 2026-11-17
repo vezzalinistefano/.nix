@@ -29,6 +29,9 @@
     # Set them with: scripts/set-secret.sh callisto <name>
     secrets."deepseek-api-key".owner = username;
     secrets."venice-api-key".owner = username;
+    # Backup credentials (services.restic.backups), readable by root only
+    secrets."restic-password".sopsFile = ../../secrets/restic.yaml;
+    secrets."restic-env".sopsFile = ../../secrets/restic.yaml;
   };
   networking.networkmanager.enable = true;
 
@@ -38,6 +41,47 @@
 
   # Compressed swap in RAM; there is no swap partition
   zramSwap.enable = true;
+
+  # ext4 on an SSD: trim weekly and drop /tmp at boot
+  services.fstrim.enable = true;
+  boot.tmp.cleanOnBoot = true;
+
+  # Nightly encrypted backup of the home directory to Backblaze B2 (bucket "callisto",
+  # region eu-central-003, one app key for it). Restic dedupes and encrypts client-side,
+  # the passphrase and key come from secrets/restic.yaml. Retention stays above B2's
+  # 30-day minimum before data can be deleted. Restore: see docs/wiki/nixos-host-setup.md
+  services.restic.backups.b2 = {
+    initialize = true;
+    repository = "s3:https://s3.eu-central-003.backblazeb2.com/callisto";
+    passwordFile = config.sops.secrets."restic-password".path;
+    environmentFile = config.sops.secrets."restic-env".path;
+    paths = [ config.users.users.${username}.home ];
+    # Rebuildable or huge, and reproducible from the flake: not worth the upload
+    exclude = [
+      "/home/${username}/.cache"
+      "/home/${username}/.local/share/Trash"
+      "/home/${username}/.local/share/containers"
+      "/home/${username}/.direnv"
+      "/home/${username}/.mozilla/firefox/*/cache2"
+      "/home/${username}/.config/BraveSoftware/*/Cache"
+      "/home/${username}/.local/share/Steam"
+      "**/node_modules"
+      "**/target"
+      "**/.direnv"
+      "**/result"
+      "**/result-*"
+    ];
+    timerConfig = {
+      OnCalendar = "daily";
+      RandomizedDelaySec = "1h";
+      Persistent = true;
+    };
+    pruneOpts = [
+      "--keep-daily 7"
+      "--keep-weekly 5"
+      "--keep-monthly 12"
+    ];
+  };
 
   time.timeZone = "Europe/Rome";
   i18n.defaultLocale = "en_US.UTF-8";
