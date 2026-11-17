@@ -43,10 +43,10 @@ hl.config({
 
     input = {
         -- Same pair as the Macs: Italian, plus US International with dead keys.
-        -- Alt+Shift switches between them.
+        -- Super+Shift+Space switches between them (bound below; Alt+Shift was too easy to
+        -- hit by accident). The bar shows the active one.
         kb_layout  = "it,us",
         kb_variant = ",intl",
-        kb_options = "grp:alt_shift_toggle",
 
         follow_mouse = 1,
 
@@ -73,6 +73,7 @@ hl.bind(mod .. " + SHIFT + Return", hl.dsp.exec_cmd("ghostty"))
 -- Launcher (modules/vicinae), like Cmd+Space with Raycast on the Macs
 hl.bind(mod .. " + Space",          hl.dsp.exec_cmd("vicinae toggle"))
 hl.bind(mod .. " + B",              hl.dsp.exec_cmd("librewolf"))
+hl.bind(mod .. " + SHIFT + Space",  hl.dsp.exec_cmd("hyprctl switchxkblayout all next"))
 -- Clipboard history
 hl.bind(mod .. " + SHIFT + V",      hl.dsp.exec_cmd("vicinae vicinae://extensions/vicinae/clipboard/history"))
 hl.bind(mod .. " + Escape",         hl.dsp.exec_cmd("loginctl lock-session"))

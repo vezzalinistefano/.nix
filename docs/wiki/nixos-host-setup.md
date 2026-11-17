@@ -141,7 +141,7 @@ Super is the modifier (`modules/hyprland/hyprland.lua`).
 | Super+Escape | lock |
 | Super+Shift+E | log out |
 | Print / Shift+Print | screenshot of a region to the clipboard / of the screen to `~/Pictures` |
-| Alt+Shift | switch keyboard layout (Italian, US International) |
+| Super+Shift+Space | switch keyboard layout (Italian, US International); the bar shows the active one |
 
 ## 4. Manual steps after the install
 
