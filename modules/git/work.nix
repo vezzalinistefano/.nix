@@ -1,12 +1,6 @@
 { lib, ... }:
 let
-  personal = {
-    user = {
-      email = "ste.vezzalini@gmail.com";
-      name = "Stefano Vezzalini";
-      signingkey = "C2006DA935947D3CA6B775E3003005400C7C7B2F";
-    };
-  };
+  personal = import ./personal-identity.nix;
 in
 {
   # Work Macs: commits use the work identity and key everywhere...
