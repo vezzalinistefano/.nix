@@ -109,6 +109,26 @@
         "type": "github"
       }
     },
+    "fingerprint-sensor": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1734692513,
+        "narHash": "sha256-3QEzFFrkXLj/JgZGoLaxq/pPkflSXfBOP10bXL8/Niw=",
+        "owner": "ahbnr",
+        "repo": "nixos-06cb-009a-fingerprint-sensor",
+        "rev": "3678b193efa1e06aab86058aecee18ddaa8878d2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ahbnr",
+        "repo": "nixos-06cb-009a-fingerprint-sensor",
+        "type": "github"
+      }
+    },
     "firefox-gnome-theme": {
       "flake": false,
       "locked": {
@@ -345,6 +365,7 @@
       "inputs": {
         "darwin": "darwin",
         "disko": "disko",
+        "fingerprint-sensor": "fingerprint-sensor",
         "herdr": "herdr",
         "home-manager": "home-manager",
         "nixos-hardware": "nixos-hardware",

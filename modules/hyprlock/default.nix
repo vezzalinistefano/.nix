@@ -1,15 +1,25 @@
-_: {
+{
+  lib,
+  osConfig,
+  ...
+}:
+{
   # Lock screen: a plain background and a password field (colours from stylix)
   programs.hyprlock = {
     enable = true;
     settings = {
       general.hide_cursor = true;
+      # Fingerprint first, password field stays usable (modules/fingerprint enables it)
+      auth.fingerprint = lib.mkIf osConfig.services.fingerprint-auth.enable {
+        enabled = 1;
+        retry_delay = 500;
+      };
       input-field = {
         size = "300, 40";
         outline_thickness = 1;
-        rounding = 0;
+        rounding = 10;
         fade_on_empty = false;
-        placeholder_text = "";
+        placeholder_text = lib.mkIf osConfig.services.fingerprint-auth.enable "fingerprint or password";
       };
       # Clock and active keyboard layout: a password typed in the wrong layout fails silently
       label = [

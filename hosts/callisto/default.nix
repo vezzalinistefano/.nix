@@ -12,6 +12,7 @@
     inputs.disko.nixosModules.disko
     inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t480
     inputs.sops-nix.nixosModules.sops
+    ../../modules/fingerprint
     ./disko.nix
     ./hardware-configuration.nix
   ];
@@ -41,6 +42,14 @@
 
   # Compressed swap in RAM; there is no swap partition
   zramSwap.enable = true;
+
+  # Battery/power info on D-Bus for apps. throttled (from nixos-hardware's T480 module)
+  # talks to upower and is in a crash loop without it.
+  services.upower.enable = true;
+
+  # Removable media: udiskie mounts it, Nautilus and GVfs browse it (smb, mtp, trash…)
+  services.udisks2.enable = true;
+  services.gvfs.enable = true;
 
   # ext4 on an SSD: trim weekly and drop /tmp at boot
   services.fstrim.enable = true;
@@ -183,7 +192,14 @@
   # Lets hyprlock (modules/hyprlock) check the password
   security.pam.services.hyprlock = { };
 
-  security.rtkit.enable = true;
+  # Fingerprint for sudo, polkit prompts, TTY logins and the lock screen. The chip is a
+  # Synaptics 06cb:009a, which libfprint cannot drive, hence the driver flake; passwords
+  # still work everywhere, and `enable = false` takes it all back out. See
+  # modules/fingerprint and docs/wiki/nixos-host-setup.md
+  services.fingerprint-auth.enable = true;
+  # python-validity until a fingerprint is enrolled: the libfprint-tod backend needs the
+  # calib-data.bin that only enrollment produces (see the wiki page).
+
   services.pipewire = {
     enable = true;
     alsa.enable = true;

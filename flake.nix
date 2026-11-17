@@ -64,6 +64,14 @@
     herdr = {
       url = "github:herdrdev/herdr/v0.9.3";
     };
+
+    # Synaptics 06cb:009a fingerprint reader (callisto): libfprint has no driver for it.
+    # Ships python-validity/open-fprintd and a TOD driver fork. nixpkgs is followed so the
+    # TOD driver is built against the same libfprint the system loads it into.
+    fingerprint-sensor = {
+      url = "github:ahbnr/nixos-06cb-009a-fingerprint-sensor";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

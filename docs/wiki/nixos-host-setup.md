@@ -188,5 +188,27 @@ password manager, and `~/.gnupg` plus `~/.config/sops/age/keys.txt` are exported
 - **Firmware**: `fwupdmgr refresh && fwupdmgr update`.
 - **SSH key for GitHub**, **age/sops keys**: as in [new-host-setup.md](new-host-setup.md), section 7.
 - **GPG**: see [gpg-vademecum.md](gpg-vademecum.md).
+- **Fingerprint**: enroll, see below.
 - **LibreWolf**: Vimium is installed by policy; allow it in private windows from the add-ons page if you want it there.
 - **herdr plugins**: installed by hand, see `modules/herdr/default.nix`.
+
+### Fingerprint
+
+The reader is a Synaptics 06cb:009a. Upstream libfprint lists that ID as unsupported, so `modules/fingerprint` drives it with the `fingerprint-sensor` flake (the `fingerprint-sensor` input in `flake.nix`) instead. `services.fingerprint-auth` turns it on for `sudo`, polkit prompts, TTY logins and hyprlock; every stack falls back to the password (one fingerprint try, 10 s, then the password prompt), so a dirty or dead finger cannot lock you out.
+
+The enrolled fingerprints live in the chip and in `/var/lib/python-validity`, never in the repo.
+
+The python-validity stack enrolls over D-Bus without asking for a password, so anyone with physical access can add a finger while it is running; the TOD backend inherits whatever fprintd does. That is why the wiki keeps the tighter backend as the end state rather than the starting one.
+
+1. Rebuild, then check the reader is there: `fprintd-list $USER` should answer over D-Bus (an empty list, not "no devices").
+2. First time only, upload the firmware Lenovo ships in its Windows driver:
+   `sudo systemctl stop python3-validity && sudo validity-sensors-firmware && sudo systemctl start python3-validity`
+3. `fprintd-enroll` and keep the finger moving until it reports success.
+4. Optional, tighter: `python-validity` replaces fprintd's daemon, enrolls without any authentication and gets stuck after a suspend. Its calibration data can be handed to a TOD driver for the normal fprintd instead: copy `/var/lib/python-validity/calib-data.bin` to `hosts/callisto/fingerprint-calib.bin`, then in `hosts/callisto/default.nix` set `services.fingerprint-auth.backend = "libfprint-tod";` and `services.fingerprint-auth.calibDataFile = ./fingerprint-calib.bin;`, and rebuild. The calibration file is compiled in, so it has to be re-copied after each fresh enrollment.
+
+To opt out again:
+- whole feature: `services.fingerprint-auth.enable = false;` and rebuild;
+- for the session only: `sudo systemctl stop python3-validity open-fprintd` (validity backend) or `sudo systemctl stop fprintd` (tod backend), which makes PAM go straight to the password;
+- check what is enrolled: `fprintd-list $USER`, delete with `fprintd-delete $USER`.
+
+Troubleshooting: `journalctl -u python3-validity` for the validity backend; "could not open device" usually means a stale session after suspend (the `open-fprintd-resume`/`-suspend` units handle that) or a fingerprint database left half-written, which a `sudo validity-sensors-firmware` followed by a fresh `fprintd-enroll` fixes.
