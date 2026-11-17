@@ -54,6 +54,13 @@
   # https://nixos.org/manual/nix/stable/command-ref/conf-file.html#conf-auto-optimise-store
   nix.optimise.automatic = true;
 
+  # Firewall on, but not blocking incoming traffic outright: sshd (when enabled) and
+  # mDNS/AirDrop keep working, unsigned daemons have to ask
+  networking.applicationFirewall = {
+    enable = true;
+    blockAllIncoming = false;
+  };
+
   # Add ability to used TouchID for sudo authentication
   security.pam.services.sudo_local = {
     enable = true;
